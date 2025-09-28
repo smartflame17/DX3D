@@ -1,6 +1,6 @@
 #include <Windows.h>
 
-LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {		// custom windows procedure	(handle, message code, parameters (depends per message type))
+LRESULT CALLBACK MyWndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {		// custom windows procedure	(handle, message code, parameters (depends per message type))
 	
 	switch (msg) {
 	case WM_CLOSE:
@@ -23,7 +23,7 @@ int CALLBACK WinMain(			// CALLBACK is stdcall convention used by windows
 	WNDCLASSEX wc = { 0 };
 	wc.cbSize = sizeof(wc);
 	wc.style = CS_OWNDC;				// allow multiple windows for app
-	wc.lpfnWndProc = DefWindowProc;		// default behaviour
+	wc.lpfnWndProc = MyWndProc;			// custom behaviour
 	wc.cbClsExtra = 0;					// extra bytes for class structure (not needed now)
 	wc.cbWndExtra = 0;					// extra windows for app (not needed now)
 	wc.hInstance = hInstance;			// handle to instance
