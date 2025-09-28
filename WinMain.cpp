@@ -1,5 +1,16 @@
 #include <Windows.h>
 
+LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {		// custom windows procedure	(handle, message code, parameters (depends per message type))
+	
+	switch (msg) {
+	case WM_CLOSE:
+		PostQuitMessage(17);	// posts quit message with return value to queue
+		break;
+	}
+
+	return DefWindowProc(hWnd, msg, wParam, lParam);	// return default behaviour otherwise
+}
+
 int CALLBACK WinMain(			// CALLBACK is stdcall convention used by windows
 	HINSTANCE	hInstance,		// handle to current instance
 	HINSTANCE	hPrevInstance,	// nullptr
@@ -37,5 +48,17 @@ int CALLBACK WinMain(			// CALLBACK is stdcall convention used by windows
 	);
 
 	ShowWindow(hWnd, SW_SHOW);		// show window
-	return 0;
+
+	// message pump
+	MSG msg;
+	BOOL gResult;
+	while ((gResult = GetMessage(&msg, nullptr, 0, 0)) > 0) {	// receive all message in queue, for all windows, and save info on msg
+		TranslateMessage(&msg);
+		DispatchMessage(&msg);
+	}
+
+	if (gResult == -1) {	// if final result for message was error
+		return -1;
+	}
+	else return msg.wParam;	// returns wParam when exitting
 }
