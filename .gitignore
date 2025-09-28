@@ -1,41 +1,53 @@
-# Prerequisites
-*.d
-
-# Compiled Object files
-*.slo
-*.lo
-*.o
-*.obj
-
-# Precompiled Headers
-*.gch
-*.pch
-
-# Linker files
-*.ilk
-
-# Debugger Files
+# Visual Studio files and directories
+.vs/
+*.suo
+*.user
+*.ncb
+*.aps
 *.pdb
-
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
-
-# Fortran module files
-*.mod
-*.smod
-
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
-
-# Executables
+*.obj
 *.exe
-*.out
-*.app
+*.dll
+*.lib
+*.ilk
+*.exp
+*.log
+*.bak
+*.sbr
+*.pch
+*.ipch
+*.tlog
+*.lastbuildstate
+*.VC.opendb
+*.VC.db
+*.sdf
+*.cache
+*.res
+*.rc.o
+*.manifest
 
-# debug information files
-*.dwo
+# Build output directories
+Debug/
+Release/
+x64/
+Win32/
+bin/
+obj/
+
+# User-specific settings and configurations
+*.local
+*.vshost.*
+*.opensdf
+*.opendb
+
+# Intermediate files
+_UpgradeReport_Files/
+ipch/
+
+# NuGet packages
+packages/
+*.nupkg
+
+# Other common ignored files
+Thumbs.db
+Desktop.ini
