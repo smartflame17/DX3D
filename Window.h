@@ -1,11 +1,25 @@
 #pragma once
 #include "SmflmWin.h"	// always put wrapper headers first to override windows macros
+#include "SmflmException.h"
 #include <optional>
 #include <string>
 #include <memory>
 
 class Window
 {
+public:
+	class Exception : public SmflmException
+	{
+	public:
+		Exception(int line, const char* file, HRESULT hr) noexcept;		// includes windows error code HRESULT
+		const char* what() const noexcept override;
+		virtual const char* GetType() const noexcept;
+		static std::string TranslateErrorCode(HRESULT hr) noexcept;		// Translates HRESULT into error string
+		HRESULT GetErrorCode() const noexcept;
+		std::string GetErrorString() const noexcept;
+	private:
+		HRESULT hr;
+	};
 private:
 	// singleton for registering/cleanup of window class
 	class WindowClass
@@ -36,3 +50,6 @@ private:
 	int height;
 	HWND hWnd;
 };
+
+// error handling exception macro
+#define SFWND_EXCEPT(hr) Window::Exception(__LINE__, __FILE__, hr)

@@ -137,10 +137,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="SmflmException.cpp" />
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="WinMain.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="SmflmException.h" />
     <ClInclude Include="SmflmWin.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>

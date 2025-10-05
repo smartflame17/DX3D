@@ -97,3 +97,48 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
 	
 	return DefWindowProc(hWnd, msg, wParam, lParam);
 }
+
+// Exception handling
+Window::Exception::Exception(int line, const char* file, HRESULT hr) noexcept:
+	SmflmException(line, file),
+	hr (hr)
+{}
+
+const char* Window::Exception::what() const noexcept
+{
+	std::ostringstream oss;
+	oss << GetType() << std::endl
+		<< "[Error Code]" << GetErrorCode() << std::endl
+		<< "[Descripton]" << GetErrorString() << std::endl
+		<< GetOriginString();
+	whatBuffer = oss.str();
+	return whatBuffer.c_str();
+}
+
+const char* Window::Exception::GetType() const noexcept
+{
+	return "Smflm Window Exception";
+}
+
+std::string Window::Exception::TranslateErrorCode(HRESULT hr) noexcept		// uses windows-provided macro to format error code into readable message
+{
+	char* pMsgBuf = nullptr;
+	DWORD nMsgLen = FormatMessage(
+		FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+		nullptr, hr, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), reinterpret_cast<LPSTR>(&pMsgBuf), 0, nullptr);
+	// Windows macro formats error code HRESULT hr into string
+	if (nMsgLen == 0) return "Unidentified Error Code";
+	std::string errorString = pMsgBuf;
+	LocalFree(pMsgBuf);			// save to string object and deallocate pMsgBuf
+	return errorString;
+}
+
+HRESULT Window::Exception::GetErrorCode() const noexcept
+{
+	return hr;
+}
+
+std::string Window::Exception::GetErrorString() const noexcept
+{
+	return TranslateErrorCode(hr);
+}
