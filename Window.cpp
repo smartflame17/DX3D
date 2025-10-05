@@ -40,7 +40,9 @@ HINSTANCE Window::WindowClass::GetInstance() noexcept
 }
 
 // Window Stuff
-Window::Window(int width, int height, const char* name) noexcept
+Window::Window(int width, int height, const char* name):
+	width (width),
+	height (height)
 {
 	// calculate window size based on desired client region size
 	RECT wr;
@@ -48,8 +50,8 @@ Window::Window(int width, int height, const char* name) noexcept
 	wr.right = width + wr.left;
 	wr.top = 100;
 	wr.bottom = height + wr.top;
-	AdjustWindowRect(&wr, WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU, FALSE);		// specify size of WINDOW from the CLIENT window size (wr)
-
+	if (AdjustWindowRect(&wr, WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU, FALSE) == 0)		// specify size of WINDOW from the CLIENT window size (wr)
+		throw SFWND_LAST_EXCEPT();
 	// create window & get hWnd
 	hWnd = CreateWindow(
 		WindowClass::GetName(), name,
@@ -57,7 +59,8 @@ Window::Window(int width, int height, const char* name) noexcept
 		CW_USEDEFAULT, CW_USEDEFAULT, wr.right - wr.left, wr.bottom - wr.top,	// let windows decide initial window position
 		nullptr, nullptr, WindowClass::GetInstance(), this						// pass pointer to class instance (to save the custom window class in message callback setup)
 	);
-	
+	if (hWnd == nullptr)
+		throw SFWND_LAST_EXCEPT();
 	// show window
 	ShowWindow(hWnd, SW_SHOWDEFAULT);
 }

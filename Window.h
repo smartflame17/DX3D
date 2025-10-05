@@ -36,7 +36,7 @@ private:
 		HINSTANCE hInst;
 	};
 public:
-	Window(int width, int height, const char* name) noexcept;
+	Window(int width, int height, const char* name);
 	~Window();
 	Window(const Window&) = delete;
 	Window& operator=(const Window&) = delete;
@@ -53,3 +53,4 @@ private:
 
 // error handling exception macro
 #define SFWND_EXCEPT(hr) Window::Exception(__LINE__, __FILE__, hr)
+#define SFWND_LAST_EXCEPT() Window::Exception(__LINE__, __FILE__, GetLastError())	// for windows function without error code
