@@ -95,8 +95,29 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
 {
 	switch (msg) {
 	case WM_CLOSE:
-		PostQuitMessage(0);	
+		PostQuitMessage(0);
 		return 0;		// only post quit message, as window destruction is handled by destructor
+
+		// ----------- Keyboard Message Handling -----------//
+	case WM_KEYDOWN:
+	case WM_SYSKEYDOWN:		//SYSKEY handling to hande the ALT(VK_MENU) key, thanks bill gates for the intuitive interface
+		if (!(lParam & 0x40000000) || kbd.IsAutoRepeatEnabled()) {	// bit 30 of lParam is 1 if previously held down (autorepeat), 
+			kbd.OnKeyPressed(static_cast<unsigned char>(wParam));
+		}
+		break;
+
+	case WM_KEYUP:
+	case WM_SYSKEYUP:
+		kbd.OnKeyReleased(static_cast<unsigned char>(wParam));
+		break;
+
+	case WM_CHAR:		// both standard messages and WM_CHAR is sent when a ASCII-correspondant key is pressed
+		kbd.OnChar(static_cast<unsigned char>(wParam));
+		break;
+
+	case WM_KILLFOCUS:	// if user un-focuses window, clear the key states
+		kbd.ClearState();
+		break;
 	}
 	
 	return DefWindowProc(hWnd, msg, wParam, lParam);

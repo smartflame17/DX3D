@@ -1,6 +1,7 @@
 #pragma once
 #include "SmflmWin.h"	// always put wrapper headers first to override windows macros
 #include "SmflmException.h"
+#include "Keyboard.h"
 #include <optional>
 #include <string>
 #include <memory>
@@ -45,6 +46,8 @@ private:
 	static LRESULT CALLBACK HandleMsgThunk(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept;
 	LRESULT HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept;							// little hack needed to pass member function to static function
 
+public:
+	Keyboard kbd;	//accessible keyboard object for key input handling
 private:
 	int width;
 	int height;
