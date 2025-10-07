@@ -2,9 +2,11 @@
 #include "SmflmWin.h"	// always put wrapper headers first to override windows macros
 #include "SmflmException.h"
 #include "Keyboard.h"
+#include "Mouse.h"
 #include <optional>
 #include <string>
 #include <memory>
+#include <sstream>
 
 class Window
 {
@@ -41,13 +43,16 @@ public:
 	~Window();
 	Window(const Window&) = delete;
 	Window& operator=(const Window&) = delete;
+
+	void SetTitle(const std::string& title);
 private:
 	static LRESULT CALLBACK HandleMsgSetup(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept;		// static function so that winapi can register as callback procedure without class pointer
 	static LRESULT CALLBACK HandleMsgThunk(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept;
 	LRESULT HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept;							// little hack needed to pass member function to static function
 
 public:
-	Keyboard kbd;	//accessible keyboard object for key input handling
+	Keyboard kbd;	// accessible keyboard object for key input handling
+	Mouse mouse;	// mouse object as well
 private:
 	int width;
 	int height;

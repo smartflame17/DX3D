@@ -19,6 +19,16 @@ int CALLBACK WinMain(			// CALLBACK is stdcall convention used by windows
 			// TODO:delete dis testing later!!
 			if (wnd.kbd.IsKeyPressed(VK_MENU))
 				MessageBox(nullptr, "Whoa", "You pressed alt!!", MB_OK | MB_ICONHAND);
+
+			// TODO: testing
+			while (!wnd.mouse.isEmpty()) {
+				const auto e = wnd.mouse.Read();
+				if (e.GetType() == Mouse::Event::Type::Move) {
+					std::ostringstream oss;
+					oss << "Mouse Position : (" << e.GetPosX() << ", " << e.GetPosY() << ")";
+					wnd.SetTitle(oss.str());
+				}
+			}
 		}
 		//  ------- Message Pump End ------- //
 
