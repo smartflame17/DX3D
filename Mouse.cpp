@@ -1,4 +1,5 @@
 #include "Mouse.h"
+#include "SmflmWin.h"
 
 std::pair<int, int> Mouse::GetPos() const noexcept
 {
@@ -135,3 +136,18 @@ void Mouse::OnWheelDown(int x, int y) noexcept
 	TrimBuffer();
 }
 
+void Mouse::OnWheelDelta(int x, int y, int delta) noexcept
+{
+	wheelDeltaCarry += delta;
+	// Accumulate up to 120 (or -120) and generate mouse wheel event (For Compatibility against free-scroll wheels with more precision)
+	while (wheelDeltaCarry > WHEEL_DELTA)
+	{
+		wheelDeltaCarry -= WHEEL_DELTA;
+		OnWheelUp(x, y);
+	}
+	while (wheelDeltaCarry <= -WHEEL_DELTA)
+	{
+		wheelDeltaCarry += WHEEL_DELTA;
+		OnWheelDown(x, y);
+	}
+}

@@ -129,6 +129,7 @@ private:	// Windows-side handling (invisible to user)
 	void OnWheelDown(int x, int y) noexcept;
 
 	void TrimBuffer() noexcept;
+	void OnWheelDelta(int x, int y, int delta) noexcept;
 
 private:
 	static constexpr unsigned int bufferSize = 16u;
@@ -138,5 +139,6 @@ private:
 	bool isRightPressed = false;
 	bool isMiddlePressed = false;
 	bool isInWindow = false;
+	int wheelDeltaCarry = 0;
 	std::queue<Event> buffer;
 };
