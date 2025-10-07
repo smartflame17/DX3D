@@ -128,7 +128,24 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
 		// ---------- Mouse message Handling ---------- //
 	case WM_MOUSEMOVE: {
 		const POINTS pt = MAKEPOINTS(lParam);
-		mouse.OnMouseMove(pt.x, pt.y);
+		// if Mouse is in client region, we log the entry to buffer and capture the mouse to handle it
+		if (pt.x >= 0 && pt.x < width && pt.y >= 0 && pt.y < height) {
+			mouse.OnMouseMove(pt.x, pt.y);
+			if (!mouse.IsInWindow()) {
+				SetCapture(hWnd);
+				mouse.OnMouseEnter();
+			}
+		}
+		// if mouse is outside client region, we log the exit and maintain capture if button is held down
+		else {
+			if (wParam & (MK_LBUTTON | MK_RBUTTON | MK_MBUTTON))
+				mouse.OnMouseMove(pt.x, pt.y);
+			// button released, remove capture and log leave to buffer
+			else {
+				ReleaseCapture();
+				mouse.OnMouseLeave();
+			}
+		}
 		break;
 	}
 	case WM_LBUTTONDOWN: {

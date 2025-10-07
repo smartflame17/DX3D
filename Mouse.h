@@ -24,6 +24,10 @@ public:
 			WheelUp,
 			WheelDown,
 
+			// For mouse capturing outside of the window
+			Enter,
+			Leave,
+
 			Move,
 			Invalid
 		};
@@ -93,6 +97,7 @@ public:
 	std::pair<int, int> GetPos() const noexcept;
 	int GetPosX() const noexcept;
 	int GetPosY() const noexcept;
+	bool IsInWindow() const noexcept;
 
 	// button press
 	bool IsLeftPressed() const noexcept;
@@ -109,6 +114,8 @@ public:
 
 private:	// Windows-side handling (invisible to user)
 	void OnMouseMove(int x, int y) noexcept;
+	void OnMouseLeave() noexcept;
+	void OnMouseEnter() noexcept;
 
 	void OnLeftPressed(int x, int y) noexcept;
 	void OnRightPressed(int x, int y) noexcept;
@@ -130,5 +137,6 @@ private:
 	bool isLeftPressed = false;
 	bool isRightPressed = false;
 	bool isMiddlePressed = false;
+	bool isInWindow = false;
 	std::queue<Event> buffer;
 };
