@@ -45,6 +45,7 @@ public:
 	Window& operator=(const Window&) = delete;
 
 	void SetTitle(const std::string& title);
+	static std::optional<int> ProcessMessages();	// c++17 feature allows returning int or nullopt if no message
 private:
 	static LRESULT CALLBACK HandleMsgSetup(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept;		// static function so that winapi can register as callback procedure without class pointer
 	static LRESULT CALLBACK HandleMsgThunk(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept;

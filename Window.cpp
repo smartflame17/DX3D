@@ -76,6 +76,22 @@ void Window::SetTitle(const std::string& title)
 		throw SFWND_LAST_EXCEPT();
 }
 
+// Using PeekMessage instead of GetMessage (which blocks until new message) to allow loop continue without any user actions
+std::optional<int> Window::ProcessMessages()
+{
+	MSG msg;
+	// While queue has message, remove from queue and dispatch them
+	while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {
+		if (msg.message == WM_QUIT)
+			return msg.wParam;	// if quit message, return arg for PostQuitMessage
+
+		TranslateMessage(&msg);
+		DispatchMessage(&msg);
+	}
+	return {};	// return empty optional if not quitting app
+}
+
+// Message handling
 LRESULT WINAPI Window::HandleMsgSetup(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept		// inital static window procedure handler (defined in CreateWindow), sets up the pointer of each instance
 {
 	if (msg == WM_NCCREATE) {	// when window is first created

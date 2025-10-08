@@ -1,4 +1,4 @@
-#include "Window.h"		// wrapper for winapi
+#include "App.h"		// wrapper for winapi
 
 int CALLBACK WinMain(			// CALLBACK is stdcall convention used by windows
 	HINSTANCE	hInstance,		// handle to current instance
@@ -7,35 +7,7 @@ int CALLBACK WinMain(			// CALLBACK is stdcall convention used by windows
 	int			nCmdShow)		// window property on startup
 {
 	try {
-		Window wnd(800, 300, "I like milk tea");	// instantiating by calling wrapper class
-
-		// ---------- Message Pump ---------- //
-		MSG msg;
-		BOOL gResult;
-		while ((gResult = GetMessage(&msg, nullptr, 0, 0)) > 0) {	// receive all message in queue, for all windows, and save info on msg
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
-
-			// TODO:delete dis testing later!!
-			if (wnd.kbd.IsKeyPressed(VK_MENU))
-				MessageBox(nullptr, "Whoa", "You pressed alt!!", MB_OK | MB_ICONHAND);
-
-			// TODO: testing
-			while (!wnd.mouse.isEmpty()) {
-				const auto e = wnd.mouse.Read();
-				if (e.GetType() == Mouse::Event::Type::Move) {
-					std::ostringstream oss;
-					oss << "Mouse Position : (" << e.GetPosX() << ", " << e.GetPosY() << ")";
-					wnd.SetTitle(oss.str());
-				}
-			}
-		}
-		//  ------- Message Pump End ------- //
-
-		if (gResult == -1) {	// if final result for message was error
-			return -1;
-		}
-		return msg.wParam;	// returns wParam when exitting
+		return App{}.Begin();
 	}
 	// ------------ Exception Handling ------------ //
 	catch ( const SmflmException& e)	// exception handling
