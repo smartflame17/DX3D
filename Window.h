@@ -1,8 +1,8 @@
 #pragma once
 #include "SmflmWin.h"	// always put wrapper headers first to override windows macros
 #include "SmflmException.h"
-#include "Keyboard.h"
-#include "Mouse.h"
+#include "Input/Keyboard.h"
+#include "Input/Mouse.h"
 #include <optional>
 #include <string>
 #include <memory>
