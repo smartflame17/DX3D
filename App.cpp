@@ -10,11 +10,15 @@ int App::Begin()
 	while (true) {
 		if (const auto ecode = Window::ProcessMessages())
 			return *ecode;
+
+		Update();
 	}
-	Update();
 }
 
 void App::Update()
 {
 	// Game logic
+
+	wnd.Gfx().ClearBuffer(1.0f, 0.0f, 1.0f);
+	wnd.Gfx().Endframe();
 }
