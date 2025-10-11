@@ -3,6 +3,7 @@
 #include "SmflmException.h"
 #include "Input/Keyboard.h"
 #include "Input/Mouse.h"
+#include "Graphics/Graphics.h"
 #include <optional>
 #include <string>
 #include <memory>
@@ -46,6 +47,7 @@ public:
 
 	void SetTitle(const std::string& title);
 	static std::optional<int> ProcessMessages();	// c++17 feature allows returning int or nullopt if no message
+	Graphics& Gfx();
 private:
 	static LRESULT CALLBACK HandleMsgSetup(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept;		// static function so that winapi can register as callback procedure without class pointer
 	static LRESULT CALLBACK HandleMsgThunk(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept;
@@ -58,6 +60,7 @@ private:
 	int width;
 	int height;
 	HWND hWnd;
+	std::unique_ptr<Graphics> pGfx;
 };
 
 // error handling exception macro

@@ -60,10 +60,15 @@ Window::Window(int width, int height, const char* name):
 		CW_USEDEFAULT, CW_USEDEFAULT, wr.right - wr.left, wr.bottom - wr.top,	// let windows decide initial window position
 		nullptr, nullptr, WindowClass::GetInstance(), this						// pass pointer to class instance (to save the custom window class in message callback setup)
 	);
+
 	if (hWnd == nullptr)
 		throw SFWND_LAST_EXCEPT();
+
 	// show window
 	ShowWindow(hWnd, SW_SHOWDEFAULT);
+
+	// create graphics object after handle initialized
+	pGfx = std::make_unique<Graphics>(hWnd);
 }
 
 Window::~Window() {
@@ -89,6 +94,11 @@ std::optional<int> Window::ProcessMessages()
 		DispatchMessage(&msg);
 	}
 	return {};	// return empty optional if not quitting app
+}
+
+Graphics& Window::Gfx()
+{
+	return *pGfx;
 }
 
 // Message handling
