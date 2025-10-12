@@ -1,7 +1,10 @@
 #include "Graphics.h"
 #include "../ErrorHandling/dxerr.h"
 #include <sstream>
+#include <d3dcompiler.h>
+
 #pragma comment(lib,"d3d11.lib")		// tell linker about d3d library
+#pragma comment(lib, "D3DCompiler.lib")	// for compiling hlsl shader at runtime
 
 namespace wrl = Microsoft::WRL;
 
@@ -84,7 +87,115 @@ void Graphics::Endframe()
 void Graphics::ClearBuffer(float r, float g, float b) noexcept
 {
 	const float color[] = { r, g, b, 1.0f };
-	pContext->ClearRenderTargetView(pTarget.Get(), color);
+	pContext->ClearRenderTargetView(pTarget.Get(), color);	// clear back buffer with specified color
+}
+
+void Graphics::DrawTestTriangle()
+{
+	wrl::ComPtr<ID3D11Buffer> pVertexBuffer;
+	HRESULT hr;
+	struct Vertex
+	{
+		float x;
+		float y;
+	};
+	const Vertex vertices[] =
+	{
+		{0.0f, 0.5f},
+		{0.5f, -0.5f},
+		{-0.5f, -0.5f}
+	};
+
+	/////////////// Vertex Buffer (Actual data) ///////////////
+
+	D3D11_BUFFER_DESC bd = {};
+	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	bd.Usage = D3D11_USAGE_DEFAULT;
+	bd.CPUAccessFlags = 0u;
+	bd.MiscFlags = 0u;
+	bd.ByteWidth = sizeof(vertices);
+	bd.StructureByteStride = sizeof(Vertex);
+
+	// create vertex buffer (basically the actual data of the vertices)
+	D3D11_SUBRESOURCE_DATA sd = {};
+	sd.pSysMem = vertices;
+	GFX_THROW_FAILED(pDevice->CreateBuffer(&bd, &sd, &pVertexBuffer));
+
+	// bind vertex buffer to pipeline
+	const UINT stride = sizeof(Vertex);
+	const UINT offset = 0u;
+	pContext->IASetVertexBuffers(0u, 1u, pVertexBuffer.GetAddressOf(), &stride, &offset);
+
+	
+
+	/////////////// Pixel Shader ///////////////
+	
+	// read in compiled pixel shader and create shader object
+	wrl::ComPtr<ID3D11PixelShader> pPixelShader;
+	wrl::ComPtr<ID3DBlob> pBlob;					// just a binary file (bytecode by hlsl compiler)
+	GFX_THROW_FAILED(D3DReadFileToBlob(L"PixelShader.cso", &pBlob));		// read compiled shader binary and save to Blob
+	GFX_THROW_FAILED(pDevice->CreatePixelShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, &pPixelShader));
+
+	// bind pixel shader
+	pContext->PSSetShader(pPixelShader.Get(), nullptr, 0u);
+
+
+	
+	/////////////// Vertex Shader ///////////////
+
+	// do the same with vertex shader
+	wrl::ComPtr<ID3D11VertexShader> pVertexShader;
+	GFX_THROW_FAILED(D3DReadFileToBlob(L"VertexShader.cso", &pBlob));		// read compiled shader binary and save to Blob
+	GFX_THROW_FAILED(pDevice->CreateVertexShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, &pVertexShader));
+
+	// bind vertex shader
+	pContext->VSSetShader(pVertexShader.Get(), nullptr, 0u);
+
+
+
+	/////////////// Input Layout (Layout info) ///////////////
+
+	// input (vertex) layout (basically the layout of the vertex buffer we sent earlier)
+	wrl::ComPtr<ID3D11InputLayout> pInputLayout;
+	const D3D11_INPUT_ELEMENT_DESC ied[] =
+	{
+		{
+		"Position",
+		0,
+		DXGI_FORMAT_R32G32_FLOAT,		// 2 32-bit floats (we are using 2d vertex (x, y)
+		0,
+		0,								// offset from beginning of vertex buffer ( sizeof(Vertex) * n-1)
+		D3D11_INPUT_PER_VERTEX_DATA,
+		0
+		}
+	};
+	pDevice->CreateInputLayout(ied, (UINT)std::size(ied), pBlob->GetBufferPointer(), pBlob->GetBufferSize(), &pInputLayout);	// the function requires the pointer to the binary shader and the size of it
+
+	// bind vertex layout
+	pContext->IASetInputLayout(pInputLayout.Get());
+
+	///////////////////////////////////////////////////////////
+
+	// bind render target (back buffer)
+	pContext->OMSetRenderTargets(1u, pTarget.GetAddressOf(), nullptr);		// no z-buffer yet so nullptr
+
+	// set primitive topology (how to intepret vertices) -> we set it to list of triangles (group by 3)
+	pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	// configure viewport
+	D3D11_VIEWPORT vp;
+	// viewport dimensions (full screen in this case)
+	vp.Width = 800;
+	vp.Height = 600;
+	// for mapping depth value
+	vp.MinDepth = 0;	
+	vp.MaxDepth = 1;
+	// coordinate of viewport inside window
+	vp.TopLeftX = 0;
+	vp.TopLeftY = 0;
+	pContext->RSSetViewports(1u, &vp);
+
+	pContext->Draw(UINT(std::size(vertices)), 0u);
 }
 
 // Exception handling

@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="리소스 파일\Shaders">
+      <UniqueIdentifier>{da7822c5-0bee-4096-8986-4e52580a9eb7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
@@ -89,5 +92,11 @@
     <None Include="ErrorHandling\DXTrace.inl">
       <Filter>리소스 파일</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Shaders\VertexShader.hlsl">
+      <Filter>리소스 파일\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\PixelShader.hlsl" />
   </ItemGroup>
 </Project>
