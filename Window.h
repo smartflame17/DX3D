@@ -12,10 +12,11 @@
 class Window
 {
 public:
-	class Exception : public SmflmException
+	class HrException : public SmflmException
 	{
+		using SmflmException::SmflmException;
 	public:
-		Exception(int line, const char* file, HRESULT hr) noexcept;		// includes windows error code HRESULT
+		HrException(int line, const char* file, HRESULT hr) noexcept;		// includes windows error code HRESULT
 		const char* what() const noexcept override;
 		virtual const char* GetType() const noexcept;
 		static std::string TranslateErrorCode(HRESULT hr) noexcept;		// Translates HRESULT into error string
@@ -24,6 +25,14 @@ public:
 	private:
 		HRESULT hr;
 	};
+
+	class NoGfxException : public HrException
+	{
+	public:
+		using HrException::HrException;
+		const char* GetType() const noexcept override;
+	};
+
 private:
 	// singleton for registering/cleanup of window class
 	class WindowClass
@@ -64,5 +73,6 @@ private:
 };
 
 // error handling exception macro
-#define SFWND_EXCEPT(hr) Window::Exception(__LINE__, __FILE__, hr)
-#define SFWND_LAST_EXCEPT() Window::Exception(__LINE__, __FILE__, GetLastError())	// for windows function without error code
+#define SFWND_EXCEPT(hr) Window::HrException(__LINE__, __FILE__, hr)
+#define SFWND_LAST_EXCEPT() Window::HrException(__LINE__, __FILE__, GetLastError())	// for windows function without error code
+#define SFWND_NOGFX_EXCEPT() Window::NoGfxException( __LINE__,__FILE__ )

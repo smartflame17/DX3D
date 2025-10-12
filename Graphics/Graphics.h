@@ -1,11 +1,32 @@
 #pragma once
 #include "../SmflmWin.h"
+#include "../ErrorHandling/SmflmException.h"
 #include <d3d11.h>
 
 // Wrapper class for d3d 11 stuff
 class Graphics
 {
 public:
+	class HrException : public SmflmException
+	{
+	public:
+		HrException(int line, const char* file, HRESULT hr) noexcept;		// includes windows error code HRESULT
+		const char* what() const noexcept override;
+		virtual const char* GetType() const noexcept;
+		static std::string TranslateErrorCode(HRESULT hr) noexcept;		// Translates HRESULT into error string
+		HRESULT GetErrorCode() const noexcept;
+		std::string GetErrorString() const noexcept;
+		std::string GetErrorDescription() const noexcept;
+	private:
+		HRESULT hr;
+	};
+	class DeviceRemovedException : public HrException
+	{
+		using HrException::HrException;
+	public:
+		const char* GetType() const noexcept override;
+	};
+
 	Graphics(HWND hWnd);
 
 	// Singleton stuff (no copy or move)

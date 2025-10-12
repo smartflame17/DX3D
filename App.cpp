@@ -19,6 +19,6 @@ void App::Update()
 {
 	// Game logic
 
-	wnd.Gfx().ClearBuffer(1.0f, 0.0f, 1.0f);
+	wnd.Gfx().ClearBuffer(0.4f, 0.2f, 1.0f);
 	wnd.Gfx().Endframe();
 }
