@@ -3,6 +3,8 @@
 #include <sstream>
 #pragma comment(lib,"d3d11.lib")		// tell linker about d3d library
 
+namespace wrl = Microsoft::WRL;
+
 #define GFX_THROW_FAILED(hrcall) if (FAILED(hr = (hrcall))) throw Graphics::HrException(__LINE__, __FILE__, hr)
 #define GFX_DEVICE_REMOVED_EXCEPT(hr) Graphics::DeviceRemovedException(__LINE__, __FILE__, (hr))
 
@@ -32,7 +34,7 @@ Graphics::Graphics(HWND hWnd)
 	sd.OutputWindow = hWnd;				// handle to our window
 	sd.Windowed = true;
 
-	sd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
+	sd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;		// double buffering  (To use DXGI_SWAP_EFFECT_FLIP_DISCARD, increment Buffercount to 2 or above)
 	sd.Flags = 0;
 
 	UINT isDebugModeFlag = 0u;
@@ -59,30 +61,13 @@ Graphics::Graphics(HWND hWnd)
 	));
 
 	// get access to texture (back buffer) in swap chain
-	ID3D11Resource* pBackBuffer = nullptr;
-	GFX_THROW_FAILED(pSwap->GetBuffer(0, __uuidof(ID3D11Resource), reinterpret_cast<void**>(&pBackBuffer)));
+	wrl::ComPtr<ID3D11Resource> pBackBuffer = nullptr;
+	GFX_THROW_FAILED(pSwap->GetBuffer(0, __uuidof(ID3D11Texture2D), &pBackBuffer));
 	GFX_THROW_FAILED(pDevice->CreateRenderTargetView(
-		pBackBuffer,
+		pBackBuffer.Get(),
 		nullptr,
 		&pTarget
 	));
-	pBackBuffer->Release();		// discard handle
-}
-
-
-Graphics::~Graphics()
-{
-	if (pTarget != nullptr)
-		pTarget->Release();
-
-	if (pContext != nullptr)
-		pContext->Release();
-
-	if (pSwap != nullptr)
-		pSwap->Release();
-
-	if (pDevice != nullptr)
-		pDevice->Release();
 }
 
 void Graphics::Endframe()
@@ -99,7 +84,7 @@ void Graphics::Endframe()
 void Graphics::ClearBuffer(float r, float g, float b) noexcept
 {
 	const float color[] = { r, g, b, 1.0f };
-	pContext->ClearRenderTargetView(pTarget, color);
+	pContext->ClearRenderTargetView(pTarget.Get(), color);
 }
 
 // Exception handling
