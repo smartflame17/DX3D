@@ -51,3 +51,6 @@ packages/
 # Other common ignored files
 Thumbs.db
 Desktop.ini
+
+# compiled shaders
+*.cso
