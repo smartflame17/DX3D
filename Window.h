@@ -1,6 +1,6 @@
 #pragma once
-#include "SmflmWin.h"	// always put wrapper headers first to override windows macros
-#include "SmflmException.h"
+#include "SmflmWin.h"							// always put wrapper headers first to override windows macros
+#include "ErrorHandling/SmflmException.h"
 #include "Input/Keyboard.h"
 #include "Input/Mouse.h"
 #include "Graphics/Graphics.h"
