@@ -20,6 +20,6 @@ void App::Update()
 	// Game logic
 
 	wnd.Gfx().ClearBuffer(0.4f, 0.2f, 1.0f);
-	wnd.Gfx().DrawTestTriangle();
+	wnd.Gfx().DrawTestTriangle(timer.Peek());
 	wnd.Gfx().Endframe();
 }
