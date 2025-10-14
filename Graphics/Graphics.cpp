@@ -92,22 +92,34 @@ void Graphics::ClearBuffer(float r, float g, float b) noexcept
 
 void Graphics::DrawTestTriangle()
 {
-	wrl::ComPtr<ID3D11Buffer> pVertexBuffer;
 	HRESULT hr;
+
 	struct Vertex
 	{
-		float x;
-		float y;
+		struct {
+			float x;
+			float y;
+		} pos;
+		struct {
+			unsigned char r;
+			unsigned char g;
+			unsigned char b;
+			unsigned char a;
+		} color;
 	};
 	const Vertex vertices[] =
 	{
-		{0.0f, 0.5f},
-		{0.5f, -0.5f},
-		{-0.5f, -0.5f}
+		{0.0f, 0.5f, 255, 0, 0, 1},
+		{0.5f, -0.5f, 0, 255, 0, 1},
+		{-0.5f, -0.5f, 0, 0, 255, 1}
 	};
-
+	const unsigned short indices[] =
+	{
+		0,1,2
+	};
 	/////////////// Vertex Buffer (Actual data) ///////////////
 
+	wrl::ComPtr<ID3D11Buffer> pVertexBuffer;
 	D3D11_BUFFER_DESC bd = {};
 	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	bd.Usage = D3D11_USAGE_DEFAULT;
@@ -126,7 +138,21 @@ void Graphics::DrawTestTriangle()
 	const UINT offset = 0u;
 	pContext->IASetVertexBuffers(0u, 1u, pVertexBuffer.GetAddressOf(), &stride, &offset);
 
-	
+	// create index buffer
+	wrl::ComPtr<ID3D11Buffer> pIndexBuffer;
+	D3D11_BUFFER_DESC ibd = {};
+	ibd.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	ibd.Usage = D3D11_USAGE_DEFAULT;
+	ibd.CPUAccessFlags = 0u;
+	ibd.MiscFlags = 0u;
+	ibd.ByteWidth = sizeof(indices);
+	ibd.StructureByteStride = sizeof(unsigned short);
+	D3D11_SUBRESOURCE_DATA isd = {};
+	isd.pSysMem = indices;
+	GFX_THROW_FAILED(pDevice->CreateBuffer(&ibd, &isd, &pIndexBuffer));
+
+	// bind index buffer to pipeline
+	pContext->IASetIndexBuffer(pIndexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0u);
 
 	/////////////// Pixel Shader ///////////////
 	
@@ -155,19 +181,23 @@ void Graphics::DrawTestTriangle()
 
 	/////////////// Input Layout (Layout info) ///////////////
 
-	// input (vertex) layout (basically the layout of the vertex buffer we sent earlier)
+	// input (vertex) layout (basically the layout of each vertex in the buffer we sent earlier)
 	wrl::ComPtr<ID3D11InputLayout> pInputLayout;
-	const D3D11_INPUT_ELEMENT_DESC ied[] =
+	const D3D11_INPUT_ELEMENT_DESC ied[] =				// Name of each element has to match name on the argument of shader (except SV_* values that are pre-defined)
 	{
-		{
-		"Position",
+		{ "Position", 0, DXGI_FORMAT_R32G32_FLOAT,		// 2 32-bit floats (we are using 2d vertex (x, y)
 		0,
-		DXGI_FORMAT_R32G32_FLOAT,		// 2 32-bit floats (we are using 2d vertex (x, y)
-		0,
-		0,								// offset from beginning of vertex buffer ( sizeof(Vertex) * n-1)
+		D3D11_APPEND_ALIGNED_ELEMENT,			// offset from beginning of vertex object
 		D3D11_INPUT_PER_VERTEX_DATA,
-		0
-		}
+		0 },
+
+		// color mapping
+		{
+		"Color", 0, DXGI_FORMAT_R8G8B8A8_UNORM,		// RGBA color normalized to float
+		0,
+		D3D11_APPEND_ALIGNED_ELEMENT,			// offset from beginning of vertex object
+		D3D11_INPUT_PER_VERTEX_DATA,
+		0 }
 	};
 	pDevice->CreateInputLayout(ied, (UINT)std::size(ied), pBlob->GetBufferPointer(), pBlob->GetBufferSize(), &pInputLayout);	// the function requires the pointer to the binary shader and the size of it
 
@@ -195,7 +225,7 @@ void Graphics::DrawTestTriangle()
 	vp.TopLeftY = 0;
 	pContext->RSSetViewports(1u, &vp);
 
-	pContext->Draw(UINT(std::size(vertices)), 0u);
+	pContext->DrawIndexed(UINT(std::size(indices)), 0u, 0u);
 }
 
 // Exception handling

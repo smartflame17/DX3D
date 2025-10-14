@@ -97,6 +97,8 @@
     <FxCompile Include="Shaders\VertexShader.hlsl">
       <Filter>리소스 파일\Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="Shaders\PixelShader.hlsl" />
+    <FxCompile Include="Shaders\PixelShader.hlsl">
+      <Filter>리소스 파일\Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
