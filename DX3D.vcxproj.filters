@@ -42,6 +42,9 @@
     <ClCompile Include="ErrorHandling\dxerr.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Tools\Timer.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SmflmWin.h">
@@ -69,6 +72,9 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="ErrorHandling\dxerr.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Tools\Timer.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

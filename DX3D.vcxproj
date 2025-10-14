@@ -143,6 +143,7 @@
     <ClCompile Include="Graphics\Graphics.cpp" />
     <ClCompile Include="Input\Keyboard.cpp" />
     <ClCompile Include="Input\Mouse.cpp" />
+    <ClCompile Include="Tools\Timer.cpp" />
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="WinMain.cpp" />
   </ItemGroup>
@@ -155,6 +156,7 @@
     <ClInclude Include="Input\Mouse.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="SmflmWin.h" />
+    <ClInclude Include="Tools\Timer.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>
