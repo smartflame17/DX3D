@@ -7,6 +7,7 @@
 #pragma comment(lib, "D3DCompiler.lib")	// for compiling hlsl shader at runtime
 
 namespace wrl = Microsoft::WRL;
+namespace dx = DirectX;
 
 #define GFX_THROW_FAILED(hrcall) if (FAILED(hr = (hrcall))) throw Graphics::HrException(__LINE__, __FILE__, hr)
 #define GFX_DEVICE_REMOVED_EXCEPT(hr) Graphics::DeviceRemovedException(__LINE__, __FILE__, (hr))
@@ -90,7 +91,7 @@ void Graphics::ClearBuffer(float r, float g, float b) noexcept
 	pContext->ClearRenderTargetView(pTarget.Get(), color);	// clear back buffer with specified color
 }
 
-void Graphics::DrawTestTriangle(float angle)
+void Graphics::DrawTestTriangle(float angle, float x, float y)
 {
 	HRESULT hr;
 
@@ -160,19 +161,16 @@ void Graphics::DrawTestTriangle(float angle)
 	// create constant buffer for transformation matrix to pass to shader (uniform in openGL)
 	struct ConstantBuffer
 	{
-		struct
-		{
-			float element[4][4];
-		} transformation;
+		dx::XMMATRIX transform;		// optimized for SIMD, don't access directly!!
 	};
 
 	const ConstantBuffer cb =
 	{
 		{
-			 std::cos(angle), std::sin(angle), 0.0f, 0.0f,
-			-std::sin(angle), std::cos(angle), 0.0f, 0.0f,
-			 0.0f,            0.0f,            1.0f, 0.0f,
-			 0.0f,            0.0f,            0.0f, 1.0f
+			dx::XMMatrixTranspose(
+			dx::XMMatrixRotationZ(angle) *
+			dx::XMMatrixScaling(0.5f, 0.5f, 1.0f) *
+			dx::XMMatrixTranslation(x, y, 0.0f))
 		}
 	};
 	wrl::ComPtr<ID3D11Buffer> pConstantBuffer;

@@ -1,5 +1,6 @@
+#include "../SmflmWin.h"
 #include "Mouse.h"
-#include "SmflmWin.h"
+
 
 std::pair<int, int> Mouse::GetPos() const noexcept
 {

@@ -2,6 +2,7 @@
 #include "../SmflmWin.h"
 #include "../ErrorHandling/SmflmException.h"
 #include <wrl.h>
+#include <DirectXMath.h>
 #include <d3d11.h>
 
 // Wrapper class for d3d 11 stuff
@@ -38,7 +39,7 @@ public:
 
 	void Endframe();	// flips front-back buffer
 	void ClearBuffer(float r, float g, float b) noexcept;
-	void DrawTestTriangle(float angle);
+	void DrawTestTriangle(float angle, float x, float y);
 
 private:
 	Microsoft::WRL::ComPtr<ID3D11Device> pDevice = nullptr;
