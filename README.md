@@ -1,4 +1,4 @@
-﻿# TapiEngine
+﻿# TapiEngine <img width="48" height="48" alt="tapiengine_logo" src="https://github.com/user-attachments/assets/a454d340-ef25-4178-b578-b205978240da" />
 
 TapiEngine is a basic 3D engine written in C++ with minimal external dependencies. It leverages the WinAPI and Direct3D 11 to provide a lightweight yet functional environment for 3D graphics development on Windows.
 
