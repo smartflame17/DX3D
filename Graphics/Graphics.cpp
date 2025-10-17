@@ -72,6 +72,19 @@ Graphics::Graphics(HWND hWnd)
 		nullptr,
 		&pTarget
 	));
+
+	// create depth stencil state (which shares space)
+	D3D11_DEPTH_STENCIL_DESC dsDesc = {};
+	dsDesc.DepthEnable = TRUE;
+	dsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+	dsDesc.DepthFunc = D3D11_COMPARISON_LESS;			// the less depth should be rendered (one that is closer to camera)
+	wrl::ComPtr<ID3D11DepthStencilState> pDSState;
+	GFX_THROW_FAILED(pDevice->CreateDepthStencilState(&dsDesc, &pDSState));
+
+	// bind state to pipeline
+	pContext->OMSetDepthStencilState(pDSState.Get(), 1u);
+
+	// create depth stencil texture
 }
 
 void Graphics::Endframe()
@@ -91,7 +104,7 @@ void Graphics::ClearBuffer(float r, float g, float b) noexcept
 	pContext->ClearRenderTargetView(pTarget.Get(), color);	// clear back buffer with specified color
 }
 
-void Graphics::DrawTestTriangle(float angle, float x, float y)
+void Graphics::DrawTest(float angle, float x, float y, float z)
 {
 	HRESULT hr;
 
@@ -100,23 +113,28 @@ void Graphics::DrawTestTriangle(float angle, float x, float y)
 		struct {
 			float x;
 			float y;
+			float z;
 		} pos;
-		struct {
-			unsigned char r;
-			unsigned char g;
-			unsigned char b;
-			unsigned char a;
-		} color;
 	};
 	const Vertex vertices[] =
 	{
-		{0.0f, 0.5f, 255, 0, 0, 1},
-		{0.5f, -0.5f, 0, 255, 0, 1},
-		{-0.5f, -0.5f, 0, 0, 255, 1}
+		{-1.0f, -1.0f, -1.0f},
+		{1.0f, -1.0f, -1.0f},
+		{-1.0f, 1.0f, -1.0f},
+		{1.0f, 1.0f, -1.0f},
+		{-1.0f, -1.0f, 1.0f},
+		{1.0f, -1.0f, 1.0f},
+		{-1.0f, 1.0f, 1.0f},
+		{1.0f, 1.0f, 1.0f}
 	};
 	const unsigned short indices[] =
 	{
-		0,1,2
+		0,2,1, 2,3,1,
+		1,3,5, 3,7,5,
+		2,6,3, 3,6,7,
+		4,5,7, 4,7,6,
+		0,4,2, 2,4,6,
+		0,1,4, 1,5,4
 	};
 	/////////////// Vertex Buffer (Actual data) ///////////////
 
@@ -169,8 +187,9 @@ void Graphics::DrawTestTriangle(float angle, float x, float y)
 		{
 			dx::XMMatrixTranspose(
 			dx::XMMatrixRotationZ(angle) *
-			dx::XMMatrixScaling(0.5f, 0.5f, 1.0f) *
-			dx::XMMatrixTranslation(x, y, 0.0f))
+			dx::XMMatrixRotationX(angle) *
+			dx::XMMatrixTranslation(x, y, z + 4.0f) *
+			dx::XMMatrixPerspectiveLH(1.0f, 3.0f/4.0f, 0.5f, 100.0f))
 		}
 	};
 	wrl::ComPtr<ID3D11Buffer> pConstantBuffer;
@@ -187,6 +206,43 @@ void Graphics::DrawTestTriangle(float angle, float x, float y)
 
 	// bind constant buffer to pipeline (shader)
 	pContext->VSSetConstantBuffers(0u, 1u, pConstantBuffer.GetAddressOf());
+
+
+	struct ConstantBuffer2
+	{
+		struct
+		{
+			float r;
+			float g;
+			float b;
+			float a;
+		} face_colors[6];
+	};
+	const ConstantBuffer2 cb2 =
+	{
+		{
+			{1.0f, 0.0f, 0.0f},
+			{1.0f, 0.0f, 0.0f},
+			{0.0f, 1.0f, 0.0f},
+			{0.0f, 0.0f, 1.0f},
+			{1.0f, 1.0f, 0.0f},
+			{0.0f, 1.0f, 1.0f},	
+		}
+	};
+	wrl::ComPtr<ID3D11Buffer> pConstantBuffer2;
+	D3D11_BUFFER_DESC cbd2;
+	cbd2.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	cbd2.Usage = D3D11_USAGE_DEFAULT;
+	cbd2.CPUAccessFlags = 0u;
+	cbd2.MiscFlags = 0u;
+	cbd2.ByteWidth = sizeof(cb2);
+	cbd2.StructureByteStride = 0u;
+	D3D11_SUBRESOURCE_DATA csd2 = {};
+	csd2.pSysMem = &cb2;
+	GFX_THROW_FAILED(pDevice->CreateBuffer(&cbd2, &csd2, &pConstantBuffer2));
+
+	// bind constant buffer to pixel shader
+	pContext->PSSetConstantBuffers(0u, 1u, pConstantBuffer2.GetAddressOf());
 
 	/////////////// Pixel Shader ///////////////
 	
@@ -219,19 +275,11 @@ void Graphics::DrawTestTriangle(float angle, float x, float y)
 	wrl::ComPtr<ID3D11InputLayout> pInputLayout;
 	const D3D11_INPUT_ELEMENT_DESC ied[] =				// Name of each element has to match name on the argument of shader (except SV_* values that are pre-defined)
 	{
-		{ "Position", 0, DXGI_FORMAT_R32G32_FLOAT,		// 2 32-bit floats (we are using 2d vertex (x, y)
+		{ "Position", 0, DXGI_FORMAT_R32G32B32_FLOAT,		// 3 32-bit floats (we are using 3d vertex (x, y, z)
 		0,
 		D3D11_APPEND_ALIGNED_ELEMENT,			// offset from beginning of vertex object
 		D3D11_INPUT_PER_VERTEX_DATA,
 		0 },
-
-		// color mapping
-		{
-		"Color", 0, DXGI_FORMAT_R8G8B8A8_UNORM,		// RGBA color normalized to float
-		0,
-		D3D11_APPEND_ALIGNED_ELEMENT,			// offset from beginning of vertex object
-		D3D11_INPUT_PER_VERTEX_DATA,
-		0 }
 	};
 	pDevice->CreateInputLayout(ied, (UINT)std::size(ied), pBlob->GetBufferPointer(), pBlob->GetBufferSize(), &pInputLayout);	// the function requires the pointer to the binary shader and the size of it
 

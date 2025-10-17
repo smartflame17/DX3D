@@ -39,7 +39,7 @@ public:
 
 	void Endframe();	// flips front-back buffer
 	void ClearBuffer(float r, float g, float b) noexcept;
-	void DrawTestTriangle(float angle, float x, float y);
+	void DrawTest(float angle, float x, float y, float z);
 
 private:
 	Microsoft::WRL::ComPtr<ID3D11Device> pDevice = nullptr;
