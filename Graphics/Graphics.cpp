@@ -85,6 +85,30 @@ Graphics::Graphics(HWND hWnd)
 	pContext->OMSetDepthStencilState(pDSState.Get(), 1u);
 
 	// create depth stencil texture
+	wrl::ComPtr<ID3D11Texture2D> pDepthStencil;
+	D3D11_TEXTURE2D_DESC descDepth = {};
+	descDepth.Width = 800u;
+	descDepth.Height = 600u;	// this should match size of swap chain
+	descDepth.MipLevels = 1u;	// 1 mip level
+	descDepth.ArraySize = 1u;	// single texture
+	descDepth.Format = DXGI_FORMAT_D32_FLOAT;	// 32-bit float for depth
+
+	// for anti-alising (not used now)
+	descDepth.SampleDesc.Count = 1u;
+	descDepth.SampleDesc.Quality = 0u;
+
+	descDepth.Usage = D3D11_USAGE_DEFAULT;
+	descDepth.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	GFX_THROW_FAILED(pDevice->CreateTexture2D(&descDepth, nullptr, &pDepthStencil));	// nullptr since no initial depth image (will be filled throughout rendering)
+
+	// create view of depth stencil texture
+	D3D11_DEPTH_STENCIL_VIEW_DESC descDSV = {};
+	descDSV.Format = DXGI_FORMAT_D32_FLOAT;
+	descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+	descDSV.Texture2D.MipSlice = 0u;
+	GFX_THROW_FAILED(pDevice->CreateDepthStencilView(pDepthStencil.Get(), &descDSV, &pDSV));
+
+	pContext->OMSetRenderTargets(1u, pTarget.GetAddressOf(), pDSV.Get());
 }
 
 void Graphics::Endframe()
@@ -102,6 +126,7 @@ void Graphics::ClearBuffer(float r, float g, float b) noexcept
 {
 	const float color[] = { r, g, b, 1.0f };
 	pContext->ClearRenderTargetView(pTarget.Get(), color);	// clear back buffer with specified color
+	pContext->ClearDepthStencilView(pDSV.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0u);	// clear depth buffer to 1.0f
 }
 
 void Graphics::DrawTest(float angle, float x, float y, float z)
@@ -288,8 +313,6 @@ void Graphics::DrawTest(float angle, float x, float y, float z)
 
 	///////////////////////////////////////////////////////////
 
-	// bind render target (back buffer)
-	pContext->OMSetRenderTargets(1u, pTarget.GetAddressOf(), nullptr);		// no z-buffer yet so nullptr
 
 	// set primitive topology (how to intepret vertices) -> we set it to list of triangles (group by 3)
 	pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
