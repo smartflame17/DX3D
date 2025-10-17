@@ -84,7 +84,7 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="..\..\..\Downloads\mogcat.ico">
+    <Image Include="..\..\..\Downloads\TapiEngine.ico">
       <Filter>리소스 파일</Filter>
     </Image>
   </ItemGroup>

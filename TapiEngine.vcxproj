@@ -164,7 +164,7 @@
     <ResourceCompile Include="TapiEngine.rc" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="..\..\..\Downloads\mogcat.ico" />
+    <Image Include="..\..\..\Downloads\TapiEngine.ico" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ErrorHandling\DXGetErrorDescription.inl" />
