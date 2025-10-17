@@ -79,7 +79,7 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="DX3D.rc">
+    <ResourceCompile Include="TapiEngine.rc">
       <Filter>리소스 파일</Filter>
     </ResourceCompile>
   </ItemGroup>

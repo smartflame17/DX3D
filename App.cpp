@@ -1,7 +1,7 @@
 #include "App.h"
 
 App::App():
-	wnd (800, 600, "I like milk tea")
+	wnd (800, 600, "TapiEngine v0.1")
 {}
 
 int App::Begin()
