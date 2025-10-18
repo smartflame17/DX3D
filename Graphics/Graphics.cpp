@@ -1,5 +1,6 @@
 #include "Graphics.h"
 #include "../ErrorHandling/dxerr.h"
+#include "../ErrorHandling/GraphicsExceptionMacros.h"
 #include <sstream>
 #include <d3dcompiler.h>
 
@@ -8,9 +9,6 @@
 
 namespace wrl = Microsoft::WRL;
 namespace dx = DirectX;
-
-#define GFX_THROW_FAILED(hrcall) if (FAILED(hr = (hrcall))) throw Graphics::HrException(__LINE__, __FILE__, hr)
-#define GFX_DEVICE_REMOVED_EXCEPT(hr) Graphics::DeviceRemovedException(__LINE__, __FILE__, (hr))
 
 Graphics::Graphics(HWND hWnd)
 {
@@ -247,7 +245,7 @@ void Graphics::DrawTest(float angle, float x, float y, float z)
 	{
 		{
 			{1.0f, 0.0f, 0.0f},
-			{1.0f, 0.0f, 0.0f},
+			{1.0f, 0.0f, 1.0f},
 			{0.0f, 1.0f, 0.0f},
 			{0.0f, 0.0f, 1.0f},
 			{1.0f, 1.0f, 0.0f},

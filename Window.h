@@ -1,6 +1,7 @@
 #pragma once
 #include "SmflmWin.h"							// always put wrapper headers first to override windows macros
 #include "ErrorHandling/SmflmException.h"
+#include "ErrorHandling/WindowExceptionMacros.h"
 #include "Input/Keyboard.h"
 #include "Input/Mouse.h"
 #include "Graphics/Graphics.h"
@@ -71,8 +72,3 @@ private:
 	HWND hWnd;
 	std::unique_ptr<Graphics> pGfx;
 };
-
-// error handling exception macro
-#define SFWND_EXCEPT(hr) Window::HrException(__LINE__, __FILE__, hr)
-#define SFWND_LAST_EXCEPT() Window::HrException(__LINE__, __FILE__, GetLastError())	// for windows function without error code
-#define SFWND_NOGFX_EXCEPT() Window::NoGfxException( __LINE__,__FILE__ )

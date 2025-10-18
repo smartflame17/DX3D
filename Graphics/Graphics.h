@@ -4,10 +4,14 @@
 #include <wrl.h>
 #include <DirectXMath.h>
 #include <d3d11.h>
+#include <vector>
+#include <memory>
+#include <random>
 
 // Wrapper class for d3d 11 stuff
 class Graphics
 {
+	friend class IBindable;
 public:
 	class HrException : public SmflmException
 	{
