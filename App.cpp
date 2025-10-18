@@ -24,10 +24,20 @@ void App::Update()
 	wnd.Gfx().ClearBuffer(0.4f, 0.2f, 1.0f);
 
 	
-	if (wnd.mouse.Read().GetType() == Mouse::Event::Type::WheelUp)
-		zpos += 1.0f;
-	else if (wnd.mouse.Read().GetType() == Mouse::Event::Type::WheelDown)
-		zpos -= 4.0f;
+	// Process all pending mouse events
+	while (!wnd.mouse.isEmpty())
+	{
+		const auto e = wnd.mouse.Read();
+		switch (e.GetType())
+		{
+		case Mouse::Event::Type::WheelUp:
+			zpos += 1.0f;
+			break;
+		case Mouse::Event::Type::WheelDown:
+			zpos -= 1.0f;
+			break;
+		}
+	}
 
 	wnd.Gfx().DrawTest(timer.Peek(), wnd.mouse.GetPosX() / 400.0f - 1.0f, -wnd.mouse.GetPosY() / 300.0f + 1.0f, zpos);
 	wnd.Gfx().Endframe();
