@@ -16,6 +16,9 @@
     <Filter Include="리소스 파일\Shaders">
       <UniqueIdentifier>{da7822c5-0bee-4096-8986-4e52580a9eb7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="헤더 파일\IBindable">
+      <UniqueIdentifier>{0b518c91-d365-41a5-950e-2a8c30321bf8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
@@ -75,6 +78,42 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Tools\Timer.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="ErrorHandling\WindowExceptionMacros.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="ErrorHandling\GraphicsExceptionMacros.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\IBindable.h">
+      <Filter>헤더 파일\IBindable</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\IndexBuffer.h">
+      <Filter>헤더 파일\IBindable</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\InputLayout.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\PixelShader.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Topology.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\ConstantBuffers.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\TransformCBuf.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Drawable.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\VertexBuffer.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\VertexShader.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

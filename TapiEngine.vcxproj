@@ -103,7 +103,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);IS_DEBUG=true</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -122,7 +122,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);IS_DEBUG=false</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -151,8 +151,20 @@
   <ItemGroup>
     <ClInclude Include="App.h" />
     <ClInclude Include="ErrorHandling\dxerr.h" />
+    <ClInclude Include="ErrorHandling\GraphicsExceptionMacros.h" />
     <ClInclude Include="ErrorHandling\SmflmException.h" />
+    <ClInclude Include="ErrorHandling\WindowExceptionMacros.h" />
+    <ClInclude Include="Graphics\ConstantBuffers.h" />
+    <ClInclude Include="Graphics\Drawable.h" />
+    <ClInclude Include="Graphics\IBindable.h" />
     <ClInclude Include="Graphics\Graphics.h" />
+    <ClInclude Include="Graphics\IndexBuffer.h" />
+    <ClInclude Include="Graphics\InputLayout.h" />
+    <ClInclude Include="Graphics\PixelShader.h" />
+    <ClInclude Include="Graphics\Topology.h" />
+    <ClInclude Include="Graphics\TransformCBuf.h" />
+    <ClInclude Include="Graphics\VertexBuffer.h" />
+    <ClInclude Include="Graphics\VertexShader.h" />
     <ClInclude Include="Input\Keyboard.h" />
     <ClInclude Include="Input\Mouse.h" />
     <ClInclude Include="resource.h" />
