@@ -5,15 +5,15 @@
 template<class T>
 class DrawableBase : public Drawable
 {
-public:
-	bool IsStaticInitialized() const noexcept	// the first object of that type will initialize the static IBindable field
+protected:
+	static bool IsStaticInitialized() noexcept	// the first object of that type will initialize the static IBindable field
 	{
 		return !staticBinds.empty();
 	}
 	
-	void AddStaticBind(std::unique_ptr<IBindable> bind) noexcept(!IS_DEBUG)
+	static void AddStaticBind(std::unique_ptr<IBindable> bind) noexcept(!IS_DEBUG)
 	{
-		assert("*Must* use AddIndexBuffer to bind index buffer" && typeid(*bind) != typeid(IndexBuffer));
+		assert("*Must* use AddStaticIndexBuffer to bind index buffer" && typeid(*bind) != typeid(IndexBuffer));
 		staticBinds.push_back(std::move(bind));
 	}
 
