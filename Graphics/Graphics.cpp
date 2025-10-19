@@ -2,7 +2,6 @@
 #include "../ErrorHandling/dxerr.h"
 #include "../ErrorHandling/GraphicsExceptionMacros.h"
 #include <sstream>
-#include <d3dcompiler.h>
 
 #pragma comment(lib,"d3d11.lib")		// tell linker about d3d library
 #pragma comment(lib, "D3DCompiler.lib")	// for compiling hlsl shader at runtime
@@ -107,6 +106,16 @@ Graphics::Graphics(HWND hWnd)
 	GFX_THROW_FAILED(pDevice->CreateDepthStencilView(pDepthStencil.Get(), &descDSV, &pDSV));
 
 	pContext->OMSetRenderTargets(1u, pTarget.GetAddressOf(), pDSV.Get());
+
+	// configure viewport
+	D3D11_VIEWPORT vp;
+	vp.Width = 800.0f;
+	vp.Height = 600.0f;
+	vp.MinDepth = 0.0f;
+	vp.MaxDepth = 1.0f;
+	vp.TopLeftX = 0.0f;
+	vp.TopLeftY = 0.0f;
+	pContext->RSSetViewports(1u, &vp);
 }
 
 void Graphics::Endframe()
@@ -114,8 +123,9 @@ void Graphics::Endframe()
 	HRESULT hr;
 	if (FAILED(hr = pSwap->Present(1u, 0u)))
 	{
-		if (hr == DXGI_ERROR_DEVICE_REMOVED)
+		if (hr == DXGI_ERROR_DEVICE_REMOVED) {
 			throw GFX_DEVICE_REMOVED_EXCEPT(pDevice->GetDeviceRemovedReason());
+		}
 		else GFX_THROW_FAILED(hr);
 	}
 }
@@ -125,6 +135,21 @@ void Graphics::ClearBuffer(float r, float g, float b) noexcept
 	const float color[] = { r, g, b, 1.0f };
 	pContext->ClearRenderTargetView(pTarget.Get(), color);	// clear back buffer with specified color
 	pContext->ClearDepthStencilView(pDSV.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0u);	// clear depth buffer to 1.0f
+}
+
+void Graphics::DrawIndexed(UINT count) noexcept(!IS_DEBUG)
+{
+	pContext->DrawIndexed(count, 0u, 0u);
+}
+
+void Graphics::SetProjection(DirectX::FXMMATRIX proj) noexcept
+{
+	projection = proj;
+}
+
+DirectX::XMMATRIX Graphics::GetProjection() const noexcept
+{
+	return projection;
 }
 
 void Graphics::DrawTest(float angle, float x, float y, float z)
@@ -331,7 +356,7 @@ void Graphics::DrawTest(float angle, float x, float y, float z)
 	pContext->DrawIndexed(UINT(std::size(indices)), 0u, 0u);
 }
 
-// Exception handling
+//////////////// Exception handling ////////////////
 Graphics::HrException::HrException(int line, const char* file, HRESULT hr) noexcept :
 	SmflmException(line, file),
 	hr(hr)

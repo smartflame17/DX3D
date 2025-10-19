@@ -19,6 +19,21 @@
     <Filter Include="헤더 파일\IBindable">
       <UniqueIdentifier>{0b518c91-d365-41a5-950e-2a8c30321bf8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="헤더 파일\Drawable">
+      <UniqueIdentifier>{9b6838a1-f2c4-430f-b54a-d9469038ab20}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\IBindable">
+      <UniqueIdentifier>{f24304c7-62b7-4969-86d3-b0795d725634}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Drawable">
+      <UniqueIdentifier>{75bd43bb-978e-46c1-90f2-5918e5fbf79a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Input">
+      <UniqueIdentifier>{bb85bb1c-6f9b-478d-a9b2-f15996386c60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Input">
+      <UniqueIdentifier>{4318fab8-314d-42e0-a75f-d8a2f7342ca8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
@@ -28,12 +43,6 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="App.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Input\Keyboard.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Input\Mouse.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Graphics\Graphics.cpp">
@@ -48,6 +57,42 @@
     <ClCompile Include="Tools\Timer.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Input\Mouse.cpp">
+      <Filter>소스 파일\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Input\Keyboard.cpp">
+      <Filter>소스 파일\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\IBindable\IBindable.cpp">
+      <Filter>소스 파일\IBindable</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\IBindable\IndexBuffer.cpp">
+      <Filter>소스 파일\IBindable</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\IBindable\InputLayout.cpp">
+      <Filter>소스 파일\IBindable</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\IBindable\TransformCBuf.cpp">
+      <Filter>소스 파일\IBindable</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\IBindable\VertexBuffer.cpp">
+      <Filter>소스 파일\IBindable</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\IBindable\VertexShader.cpp">
+      <Filter>소스 파일\IBindable</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\IBindable\Topology.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\IBindable\PixelShader.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Drawable\Drawable.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Drawable\Box.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SmflmWin.h">
@@ -60,12 +105,6 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="App.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Input\Keyboard.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Input\Mouse.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Graphics\Graphics.h">
@@ -86,34 +125,46 @@
     <ClInclude Include="ErrorHandling\GraphicsExceptionMacros.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Graphics\IBindable.h">
+    <ClInclude Include="Graphics\IBindable\IBindable.h">
       <Filter>헤더 파일\IBindable</Filter>
     </ClInclude>
-    <ClInclude Include="Graphics\IndexBuffer.h">
+    <ClInclude Include="Graphics\IBindable\IndexBuffer.h">
       <Filter>헤더 파일\IBindable</Filter>
     </ClInclude>
-    <ClInclude Include="Graphics\InputLayout.h">
+    <ClInclude Include="Graphics\IBindable\ConstantBuffers.h">
+      <Filter>헤더 파일\IBindable</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\IBindable\InputLayout.h">
+      <Filter>헤더 파일\IBindable</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\IBindable\PixelShader.h">
+      <Filter>헤더 파일\IBindable</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\IBindable\Topology.h">
+      <Filter>헤더 파일\IBindable</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\IBindable\TransformCBuf.h">
+      <Filter>헤더 파일\IBindable</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\IBindable\VertexBuffer.h">
+      <Filter>헤더 파일\IBindable</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\IBindable\VertexShader.h">
+      <Filter>헤더 파일\IBindable</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Drawable\Drawable.h">
+      <Filter>헤더 파일\Drawable</Filter>
+    </ClInclude>
+    <ClInclude Include="Input\Keyboard.h">
+      <Filter>헤더 파일\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Input\Mouse.h">
+      <Filter>헤더 파일\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Drawable\Box.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Graphics\PixelShader.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\Topology.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\ConstantBuffers.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\TransformCBuf.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\Drawable.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\VertexBuffer.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\VertexShader.h">
+    <ClInclude Include="Graphics\IBindable\IBindableBase.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
@@ -137,6 +188,7 @@
     <None Include="ErrorHandling\DXTrace.inl">
       <Filter>리소스 파일</Filter>
     </None>
+    <None Include="Graphics\Graphics.md" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\VertexShader.hlsl">

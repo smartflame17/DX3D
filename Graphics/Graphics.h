@@ -4,6 +4,7 @@
 #include <wrl.h>
 #include <DirectXMath.h>
 #include <d3d11.h>
+#include <d3dcompiler.h>
 #include <vector>
 #include <memory>
 #include <random>
@@ -43,9 +44,14 @@ public:
 
 	void Endframe();	// flips front-back buffer
 	void ClearBuffer(float r, float g, float b) noexcept;
+	void DrawIndexed(UINT count) noexcept(!IS_DEBUG);
+	void SetProjection(DirectX::FXMMATRIX proj) noexcept;		// Sets final projection matrix after all calculation for a single frame is done
+	DirectX::XMMATRIX GetProjection() const noexcept;
 	void DrawTest(float angle, float x, float y, float z);
 
 private:
+	DirectX::XMMATRIX projection;								// projection matrix
+
 	Microsoft::WRL::ComPtr<ID3D11Device> pDevice = nullptr;
 	Microsoft::WRL::ComPtr<IDXGISwapChain> pSwap = nullptr;
 	Microsoft::WRL::ComPtr<ID3D11DeviceContext> pContext = nullptr;

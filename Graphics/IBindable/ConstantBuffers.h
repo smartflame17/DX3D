@@ -1,17 +1,16 @@
 #pragma once
 #include "IBindable.h"
-#include "../ErrorHandling/GraphicsExceptionMacros.h"
+#include "../../ErrorHandling/GraphicsExceptionMacros.h"
 
 template<typename C>
 class ConstantBuffer : public IBindable
 {
 public:
-	void Update(Graphics& gfx, const C& consts)
+	void Update(Graphics& gfx, const C& consts)		// instead of creating and destroying cBuffers per frame, we map and memcpy into that address
 	{
-		INFOMAN(gfx);
-
+		HRESULT hr;
 		D3D11_MAPPED_SUBRESOURCE msr;
-		GFX_THROW_INFO(GetContext(gfx)->Map(
+		GFX_THROW_FAILED(GetContext(gfx)->Map(
 			pConstantBuffer.Get(), 0u,
 			D3D11_MAP_WRITE_DISCARD, 0u,
 			&msr
@@ -19,26 +18,24 @@ public:
 		memcpy(msr.pData, &consts, sizeof(consts));
 		GetContext(gfx)->Unmap(pConstantBuffer.Get(), 0u);
 	}
-	ConstantBuffer(Graphics& gfx, const C& consts)
+	ConstantBuffer(Graphics& gfx, const C& consts)		// init with data
 	{
-		INFOMAN(gfx);
-
+		HRESULT hr;
 		D3D11_BUFFER_DESC cbd;
 		cbd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-		cbd.Usage = D3D11_USAGE_DYNAMIC;
-		cbd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+		cbd.Usage = D3D11_USAGE_DYNAMIC;				// Dynamic so we can update it each frame
+		cbd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;	// CPU needs to write (update) the value
 		cbd.MiscFlags = 0u;
 		cbd.ByteWidth = sizeof(consts);
 		cbd.StructureByteStride = 0u;
 
 		D3D11_SUBRESOURCE_DATA csd = {};
 		csd.pSysMem = &consts;
-		GFX_THROW_INFO(GetDevice(gfx)->CreateBuffer(&cbd, &csd, &pConstantBuffer));
+		GFX_THROW_FAILED(GetDevice(gfx)->CreateBuffer(&cbd, &csd, &pConstantBuffer));
 	}
 	ConstantBuffer(Graphics& gfx)
 	{
-		INFOMAN(gfx);
-
+		HRESULT hr;
 		D3D11_BUFFER_DESC cbd;
 		cbd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 		cbd.Usage = D3D11_USAGE_DYNAMIC;
@@ -46,7 +43,7 @@ public:
 		cbd.MiscFlags = 0u;
 		cbd.ByteWidth = sizeof(C);
 		cbd.StructureByteStride = 0u;
-		GFX_THROW_INFO(GetDevice(gfx)->CreateBuffer(&cbd, nullptr, &pConstantBuffer));
+		GFX_THROW_FAILED(GetDevice(gfx)->CreateBuffer(&cbd, nullptr, &pConstantBuffer));
 	}
 protected:
 	Microsoft::WRL::ComPtr<ID3D11Buffer> pConstantBuffer;
@@ -56,7 +53,7 @@ template<typename C>
 class VertexConstantBuffer : public ConstantBuffer<C>
 {
 	using ConstantBuffer<C>::pConstantBuffer;
-	using Bindable::GetContext;
+	using IBindable::GetContext;		// template inheritance fix (declare explicitly)
 public:
 	using ConstantBuffer<C>::ConstantBuffer;
 	void Bind(Graphics& gfx) noexcept override
@@ -69,7 +66,7 @@ template<typename C>
 class PixelConstantBuffer : public ConstantBuffer<C>
 {
 	using ConstantBuffer<C>::pConstantBuffer;
-	using Bindable::GetContext;
+	using IBindable::GetContext;
 public:
 	using ConstantBuffer<C>::ConstantBuffer;
 	void Bind(Graphics& gfx) noexcept override

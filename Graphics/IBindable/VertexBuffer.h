@@ -1,16 +1,17 @@
 #pragma once
 #include "IBindable.h"
-#include "../ErrorHandling/GraphicsExceptionMacros.h"
+#include "../../ErrorHandling/GraphicsExceptionMacros.h"
+
 
 class VertexBuffer : public IBindable
 {
 public:
 	template<class V>
-	VertexBuffer(Graphics& gfx, const std::vector<V>& vertices)
+	VertexBuffer(Graphics& gfx, const std::vector<V>& vertices)		// templated constructor to handle any vertex structure
 		:
 		stride(sizeof(V))
 	{
-		INFOMAN(gfx);
+		HRESULT hr;
 
 		D3D11_BUFFER_DESC bd = {};
 		bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
@@ -21,7 +22,7 @@ public:
 		bd.StructureByteStride = sizeof(V);
 		D3D11_SUBRESOURCE_DATA sd = {};
 		sd.pSysMem = vertices.data();
-		GFX_THROW_INFO(GetDevice(gfx)->CreateBuffer(&bd, &sd, &pVertexBuffer));
+		GFX_THROW_FAILED(GetDevice(gfx)->CreateBuffer(&bd, &sd, &pVertexBuffer));
 	}
 	void Bind(Graphics& gfx) noexcept override;
 protected:

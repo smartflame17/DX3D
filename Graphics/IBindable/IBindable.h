@@ -1,5 +1,5 @@
 #pragma once
-#include "Graphics.h"
+#include "../Graphics.h"
 
 
 // Parent abstract class that encapsulates all direct3d-side things. Later, 'game objects' will have a container of IBindables to access any required dx3d operations
