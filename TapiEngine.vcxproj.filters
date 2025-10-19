@@ -188,7 +188,7 @@
     <None Include="ErrorHandling\DXTrace.inl">
       <Filter>리소스 파일</Filter>
     </None>
-    <None Include="Graphics\Graphics.md" />
+    <None Include="Graphics\README.md" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\VertexShader.hlsl">

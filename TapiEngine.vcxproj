@@ -194,7 +194,7 @@
     <None Include="ErrorHandling\DXGetErrorDescription.inl" />
     <None Include="ErrorHandling\DXGetErrorString.inl" />
     <None Include="ErrorHandling\DXTrace.inl" />
-    <None Include="Graphics\Graphics.md">
+    <None Include="Graphics\README.md">
       <SubType>
       </SubType>
     </None>
