@@ -52,6 +52,16 @@ public:
 	DirectX::XMMATRIX GetProjection() const noexcept;
 	void DrawTest(float angle, float x, float y, float z);
 
+	// Overload new and delete for 16-byte alignment
+	void* operator new(size_t i)
+	{
+		return _aligned_malloc(i, 16);
+	}
+
+	void operator delete(void* p)
+	{
+		_aligned_free(p);
+	}
 private:
 	DirectX::XMMATRIX projection;								// projection matrix
 

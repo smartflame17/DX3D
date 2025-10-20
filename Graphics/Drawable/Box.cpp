@@ -62,7 +62,7 @@ Box::Box(Graphics& gfx,
 		};
 		AddStaticIndexBuffer(std::make_unique<IndexBuffer>(gfx, indices));	// add index buffer
 
-		struct alignas(16) ConstantBuffer2
+		struct ConstantBuffer2
 		{
 			struct
 			{

@@ -241,6 +241,7 @@ void Graphics::DrawTest(float angle, float x, float y, float z)
 		{
 			dx::XMMatrixTranspose(
 			dx::XMMatrixRotationZ(angle) *
+			dx::XMMatrixRotationY(angle)*
 			dx::XMMatrixRotationX(angle) *
 			dx::XMMatrixTranslation(x, y, z + 4.0f) *
 			dx::XMMatrixPerspectiveLH(1.0f, 3.0f/4.0f, 0.5f, 100.0f))
@@ -262,7 +263,7 @@ void Graphics::DrawTest(float angle, float x, float y, float z)
 	pContext->VSSetConstantBuffers(0u, 1u, pConstantBuffer.GetAddressOf());
 
 
-	struct alignas(16) ConstantBuffer2
+	struct ConstantBuffer2
 	{
 		struct
 		{
@@ -275,12 +276,12 @@ void Graphics::DrawTest(float angle, float x, float y, float z)
 	const ConstantBuffer2 cb2 =
 	{
 		{
-			{1.0f, 0.0f, 0.0f, 1.0f},
 			{1.0f, 0.0f, 1.0f, 1.0f},
 			{0.0f, 1.0f, 0.0f, 1.0f},
 			{0.0f, 0.0f, 1.0f, 1.0f},
 			{1.0f, 1.0f, 0.0f, 1.0f},
 			{0.0f, 1.0f, 1.0f, 1.0f},
+			{1.0f, 0.0f, 0.0f, 1.0f}
 		}
 	};
 	wrl::ComPtr<ID3D11Buffer> pConstantBuffer2;
