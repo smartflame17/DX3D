@@ -141,9 +141,6 @@ void Graphics::ClearBuffer(float r, float g, float b) noexcept
 	const float color[] = { r, g, b, 1.0f };
 	pContext->ClearRenderTargetView(pTarget.Get(), color);	// clear back buffer with specified color
 	pContext->ClearDepthStencilView(pDSV.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0u);	// clear depth buffer to 1.0f
-
-	// TODO: testing
-	pContext->OMSetRenderTargets(1u, pTarget.GetAddressOf(), pDSV.Get());
 }
 
 void Graphics::DrawIndexed(UINT count) noexcept(!IS_DEBUG)
