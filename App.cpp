@@ -46,7 +46,7 @@ void App::Update()
 	}
 	
 	// Process all pending mouse events
-	while (!wnd.mouse.isEmpty())
+	/*while (!wnd.mouse.isEmpty())
 	{
 		const auto e = wnd.mouse.Read();
 		switch (e.GetType())
@@ -60,7 +60,7 @@ void App::Update()
 		}
 	}
 
-	wnd.Gfx().DrawTest(timer.Peek(), wnd.mouse.GetPosX() / 400.0f - 1.0f, -wnd.mouse.GetPosY() / 300.0f + 1.0f, zpos);
+	wnd.Gfx().DrawTest(timer.Peek(), wnd.mouse.GetPosX() / 400.0f - 1.0f, -wnd.mouse.GetPosY() / 300.0f + 1.0f, zpos);*/
 
 	// Draw Sprites and Text
 	wnd.Gfx().pSpriteBatch->Begin();
