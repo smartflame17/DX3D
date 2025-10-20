@@ -10,7 +10,7 @@ App::App():
 	std::uniform_real_distribution<float> ddist(0.0f, 3.1415f * 2.0f);
 	std::uniform_real_distribution<float> odist(0.0f, 3.1415f * 0.3f);
 	std::uniform_real_distribution<float> rdist(6.0f, 20.0f);
-	for (auto i = 0; i < 80; i++)
+	for (auto i = 0; i < 8; i++)
 	{
 		boxes.push_back(std::make_unique<Box>(
 			wnd.Gfx(), rng, adist,
@@ -64,7 +64,7 @@ void App::Update()
 
 	// Draw Sprites and Text
 	wnd.Gfx().pSpriteBatch->Begin();
-	wnd.Gfx().pSpriteFont->DrawString(wnd.Gfx().pSpriteBatch.get(), L"Hello, DirectXTK!", DirectX::XMFLOAT2(200, 200), DirectX::Colors::White);
+	wnd.Gfx().pSpriteFont->DrawString(wnd.Gfx().pSpriteBatch.get(), L"Hello, DirectXTK!", DirectX::XMFLOAT2(400, 200), DirectX::Colors::White);
 	wnd.Gfx().pSpriteBatch->End();
 
 

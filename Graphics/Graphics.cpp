@@ -141,6 +141,9 @@ void Graphics::ClearBuffer(float r, float g, float b) noexcept
 	const float color[] = { r, g, b, 1.0f };
 	pContext->ClearRenderTargetView(pTarget.Get(), color);	// clear back buffer with specified color
 	pContext->ClearDepthStencilView(pDSV.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0u);	// clear depth buffer to 1.0f
+
+	// TODO: testing
+	pContext->OMSetRenderTargets(1u, pTarget.GetAddressOf(), pDSV.Get());
 }
 
 void Graphics::DrawIndexed(UINT count) noexcept(!IS_DEBUG)
@@ -262,7 +265,7 @@ void Graphics::DrawTest(float angle, float x, float y, float z)
 	pContext->VSSetConstantBuffers(0u, 1u, pConstantBuffer.GetAddressOf());
 
 
-	struct ConstantBuffer2
+	struct alignas(16) ConstantBuffer2
 	{
 		struct
 		{
@@ -275,12 +278,12 @@ void Graphics::DrawTest(float angle, float x, float y, float z)
 	const ConstantBuffer2 cb2 =
 	{
 		{
-			{1.0f, 0.0f, 0.0f},
-			{1.0f, 0.0f, 1.0f},
-			{0.0f, 1.0f, 0.0f},
-			{0.0f, 0.0f, 1.0f},
-			{1.0f, 1.0f, 0.0f},
-			{0.0f, 1.0f, 1.0f},	
+			{1.0f, 0.0f, 0.0f, 1.0f},
+			{1.0f, 0.0f, 1.0f, 1.0f},
+			{0.0f, 1.0f, 0.0f, 1.0f},
+			{0.0f, 0.0f, 1.0f, 1.0f},
+			{1.0f, 1.0f, 0.0f, 1.0f},
+			{0.0f, 1.0f, 1.0f, 1.0f},
 		}
 	};
 	wrl::ComPtr<ID3D11Buffer> pConstantBuffer2;

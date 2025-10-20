@@ -62,7 +62,7 @@ Box::Box(Graphics& gfx,
 		};
 		AddStaticIndexBuffer(std::make_unique<IndexBuffer>(gfx, indices));	// add index buffer
 
-		struct ConstantBuffer2
+		struct alignas(16) ConstantBuffer2
 		{
 			struct
 			{
@@ -75,12 +75,12 @@ Box::Box(Graphics& gfx,
 		const ConstantBuffer2 cb2 =
 		{
 			{
-				{ 1.0f,0.0f,1.0f },
-				{ 1.0f,0.0f,0.0f },
-				{ 0.0f,1.0f,0.0f },
-				{ 0.0f,0.0f,1.0f },
-				{ 1.0f,1.0f,0.0f },
-				{ 0.0f,1.0f,1.0f },
+				{ 1.0f,0.0f,1.0f,1.0f },
+				{ 1.0f,0.0f,0.0f,1.0f },
+				{ 0.0f,1.0f,0.0f,1.0f },
+				{ 0.0f,0.0f,1.0f,1.0f },
+				{ 1.0f,1.0f,0.0f,1.0f },
+				{ 0.0f,1.0f,1.0f,1.0f },
 			}
 		};
 		AddStaticBind(std::make_unique<PixelConstantBuffer<ConstantBuffer2>>(gfx, cb2));
