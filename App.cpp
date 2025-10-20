@@ -61,5 +61,12 @@ void App::Update()
 	}
 
 	wnd.Gfx().DrawTest(timer.Peek(), wnd.mouse.GetPosX() / 400.0f - 1.0f, -wnd.mouse.GetPosY() / 300.0f + 1.0f, zpos);*/
+
+	// Draw Sprites and Text
+	wnd.Gfx().pSpriteBatch->Begin();
+	wnd.Gfx().pSpriteFont->DrawString(wnd.Gfx().pSpriteBatch.get(), L"Hello, DirectXTK!", DirectX::XMFLOAT2(200, 200), DirectX::Colors::White);
+	wnd.Gfx().pSpriteBatch->End();
+
+
 	wnd.Gfx().Endframe();
 }

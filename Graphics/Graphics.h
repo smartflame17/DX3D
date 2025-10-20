@@ -1,6 +1,9 @@
 #pragma once
 #include "../SmflmWin.h"
 #include "../ErrorHandling/SmflmException.h"
+#include "SimpleMath.h"
+#include "SpriteBatch.h"
+#include "SpriteFont.h"
 #include <wrl.h>
 #include <DirectXMath.h>
 #include <d3d11.h>
@@ -57,4 +60,8 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11DeviceContext> pContext = nullptr;
 	Microsoft::WRL::ComPtr<ID3D11RenderTargetView> pTarget = nullptr;
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> pDSV = nullptr;
+
+public:
+	std::unique_ptr<DirectX::SpriteBatch> pSpriteBatch;
+	std::unique_ptr<DirectX::SpriteFont> pSpriteFont;
 };

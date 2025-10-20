@@ -5,6 +5,7 @@
 
 #pragma comment(lib,"d3d11.lib")		// tell linker about d3d library
 #pragma comment(lib, "D3DCompiler.lib")	// for compiling hlsl shader at runtime
+#pragma comment(lib, "DirectXTK.lib")	// link DirectX Toolkit library
 
 namespace wrl = Microsoft::WRL;
 namespace dx = DirectX;
@@ -60,6 +61,11 @@ Graphics::Graphics(HWND hWnd)
 		nullptr,						// output feature level
 		&pContext
 	));
+
+	// init spritefont and spritebatch
+	pSpriteBatch = std::make_unique<DirectX::SpriteBatch>(pContext.Get());
+	pSpriteFont = std::make_unique<DirectX::SpriteFont>(pDevice.Get(), L"SegoeUI.spritefont");
+
 
 	// get access to texture (back buffer) in swap chain
 	wrl::ComPtr<ID3D11Resource> pBackBuffer = nullptr;
