@@ -94,7 +94,7 @@ Graphics::Graphics(HWND hWnd)
 	descDepth.Height = 600u;	// this should match size of swap chain
 	descDepth.MipLevels = 1u;	// 1 mip level
 	descDepth.ArraySize = 1u;	// single texture
-	descDepth.Format = DXGI_FORMAT_D32_FLOAT;	// 32-bit float for depth
+	descDepth.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;	// 24-bit float for depth, 8-bit uint for stencil
 
 	// for anti-alising (not used now)
 	descDepth.SampleDesc.Count = 1u;
@@ -106,15 +106,16 @@ Graphics::Graphics(HWND hWnd)
 
 	// create view of depth stencil texture
 	D3D11_DEPTH_STENCIL_VIEW_DESC descDSV = {};
-	descDSV.Format = DXGI_FORMAT_D32_FLOAT;
+	descDSV.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 	descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 	descDSV.Texture2D.MipSlice = 0u;
+	
 	GFX_THROW_FAILED(pDevice->CreateDepthStencilView(pDepthStencil.Get(), &descDSV, &pDSV));
 
 	pContext->OMSetRenderTargets(1u, pTarget.GetAddressOf(), pDSV.Get());
 
 	// configure viewport
-	D3D11_VIEWPORT vp;
+	D3D11_VIEWPORT vp = {};
 	vp.Width = 800.0f;
 	vp.Height = 600.0f;
 	vp.MinDepth = 0.0f;
@@ -140,7 +141,7 @@ void Graphics::ClearBuffer(float r, float g, float b) noexcept
 {
 	const float color[] = { r, g, b, 1.0f };
 	pContext->ClearRenderTargetView(pTarget.Get(), color);	// clear back buffer with specified color
-	pContext->ClearDepthStencilView(pDSV.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0u);	// clear depth buffer to 1.0f
+	pContext->ClearDepthStencilView(pDSV.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0u);	// clear depth buffer to 1.0f (max depth)
 }
 
 void Graphics::DrawIndexed(UINT count) noexcept(!IS_DEBUG)

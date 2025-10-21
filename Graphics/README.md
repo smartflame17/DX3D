@@ -43,3 +43,7 @@ Performs any Direct3D pipeline-side function of the corresponding class. Constan
 virtual void Update()
 ```
 Performs any update needed per frame.
+
+## Others
+
+I have used Microsoft's DirectXTK (DirectX Toolkit) for implementing sprite / text rendering.
