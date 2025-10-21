@@ -25,19 +25,31 @@ App::~App()
 
 int App::Begin()
 {
+	// Define timestep and init timer
+	const float dt = 1.0f / TARGET_FPS;
+	float accumulator = 0.0f;
+	timer.Mark();
+
 	// If ecode has value (some event handling)
 	while (true) {
 		if (const auto ecode = Window::ProcessMessages())
 			return *ecode;
 
-		Update();
+		// Accumulate the time elapsed since the last frame
+		accumulator += timer.Mark();
+
+		// As long as we have enough accumulated time,
+		// run the update logic in fixed steps.
+		while (accumulator >= dt)
+		{
+			Update(dt);
+			accumulator -= dt;
+		}
 	}
 }
 
-void App::Update()
+void App::Update(float dt)
 {
-	// Game logic
-	auto dt = timer.Mark();
 	wnd.Gfx().ClearBuffer(0.4f, 0.2f, 1.0f);
 	for (auto& b : boxes)
 	{

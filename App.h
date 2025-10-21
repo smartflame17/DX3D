@@ -3,6 +3,8 @@
 #include "Tools/Timer.h"
 #include "Graphics/Drawable/Box.h"
 
+#define TARGET_FPS 60.0f
+
 class App
 {
 public:
@@ -10,7 +12,7 @@ public:
 	~App();
 	int Begin();	// handles message pump between windows and the app
 private:
-	void Update();	// called per frame
+	void Update(float dt);	// called per frame
 private:
 	Window wnd;
 	Timer timer;
