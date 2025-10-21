@@ -75,7 +75,12 @@ void App::Update(float dt)
 	wnd.Gfx().DrawTest(timer.Peek(), wnd.mouse.GetPosX() / 400.0f - 1.0f, -wnd.mouse.GetPosY() / 300.0f + 1.0f, zpos);*/
 
 	// Draw Sprites and Text
-	wnd.Gfx().pSpriteBatch->Begin();
+	wnd.Gfx().pSpriteBatch->Begin(DirectX::SpriteSortMode_Deferred, // Or your preferred sort mode
+		nullptr,                          // Use default BlendState (alpha blend)
+		nullptr,                          // Use default SamplerState
+		wnd.Gfx().GetDepthStencilState3D(), // <--- Your 3D Depth State
+		nullptr                           // Use default RasterizerState
+	);
 	wnd.Gfx().pSpriteFont->DrawString(wnd.Gfx().pSpriteBatch.get(), L"Hello, DirectXTK!", DirectX::XMFLOAT2(300, 400), DirectX::Colors::PaleVioletRed);
 	wnd.Gfx().pSpriteBatch->End();
 

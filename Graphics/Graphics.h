@@ -52,6 +52,8 @@ public:
 	DirectX::XMMATRIX GetProjection() const noexcept;
 	void DrawTest(float angle, float x, float y, float z);
 
+	ID3D11DepthStencilState* GetDepthStencilState3D();
+
 	// Overload new and delete for 16-byte alignment
 	void* operator new(size_t i)
 	{
@@ -70,7 +72,7 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11DeviceContext> pContext = nullptr;
 	Microsoft::WRL::ComPtr<ID3D11RenderTargetView> pTarget = nullptr;
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> pDSV = nullptr;
-
+	Microsoft::WRL::ComPtr<ID3D11DepthStencilState> pDSState = nullptr;
 public:
 	std::unique_ptr<DirectX::SpriteBatch> pSpriteBatch;
 	std::unique_ptr<DirectX::SpriteFont> pSpriteFont;

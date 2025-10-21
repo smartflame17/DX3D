@@ -81,7 +81,6 @@ Graphics::Graphics(HWND hWnd)
 	dsDesc.DepthEnable = TRUE;
 	dsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
 	dsDesc.DepthFunc = D3D11_COMPARISON_LESS;			// the less depth should be rendered (one that is closer to camera)
-	wrl::ComPtr<ID3D11DepthStencilState> pDSState;
 	GFX_THROW_FAILED(pDevice->CreateDepthStencilState(&dsDesc, &pDSState));
 
 	// bind state to pipeline
@@ -102,14 +101,17 @@ Graphics::Graphics(HWND hWnd)
 
 	descDepth.Usage = D3D11_USAGE_DEFAULT;
 	descDepth.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	descDepth.CPUAccessFlags = 0;
+	descDepth.MiscFlags = 0;
 	GFX_THROW_FAILED(pDevice->CreateTexture2D(&descDepth, nullptr, &pDepthStencil));	// nullptr since no initial depth image (will be filled throughout rendering)
 
 	// create view of depth stencil texture
 	D3D11_DEPTH_STENCIL_VIEW_DESC descDSV = {};
 	descDSV.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-	descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+	descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DMS;
 	descDSV.Texture2D.MipSlice = 0u;
-	
+	descDSV.Texture2DMS.UnusedField_NothingToDefine = 0;
+
 	GFX_THROW_FAILED(pDevice->CreateDepthStencilView(pDepthStencil.Get(), &descDSV, &pDSV));
 
 	pContext->OMSetRenderTargets(1u, pTarget.GetAddressOf(), pDSV.Get());
@@ -362,6 +364,11 @@ void Graphics::DrawTest(float angle, float x, float y, float z)
 	pContext->RSSetViewports(1u, &vp);
 
 	pContext->DrawIndexed(UINT(std::size(indices)), 0u, 0u);
+}
+
+ID3D11DepthStencilState* Graphics::GetDepthStencilState3D()
+{
+	return pDSState.Get();
 }
 
 //////////////// Exception handling ////////////////
