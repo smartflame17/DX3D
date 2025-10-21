@@ -63,7 +63,7 @@ public:
 		_aligned_free(p);
 	}
 private:
-	DirectX::XMMATRIX projection;								// projection matrix
+	DirectX::XMMATRIX projection = DirectX::XMMATRIX();								// projection matrix
 
 	Microsoft::WRL::ComPtr<ID3D11Device> pDevice = nullptr;
 	Microsoft::WRL::ComPtr<IDXGISwapChain> pSwap = nullptr;

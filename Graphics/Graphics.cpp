@@ -64,7 +64,7 @@ Graphics::Graphics(HWND hWnd)
 
 	// init spritefont and spritebatch
 	pSpriteBatch = std::make_unique<DirectX::SpriteBatch>(pContext.Get());
-	pSpriteFont = std::make_unique<DirectX::SpriteFont>(pDevice.Get(), L"SegoeUI.spritefont");
+	pSpriteFont = std::make_unique<DirectX::SpriteFont>(pDevice.Get(), L"Graphics/Fonts/SegoeUI.spritefont");
 
 
 	// get access to texture (back buffer) in swap chain
