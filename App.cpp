@@ -1,7 +1,5 @@
 #include "App.h"
 
-float zpos = 0.0f;
-
 App::App():
 	wnd (800, 600, "TapiEngine v0.1")
 {
@@ -10,11 +8,15 @@ App::App():
 	std::uniform_real_distribution<float> ddist(0.0f, 3.1415f * 2.0f);
 	std::uniform_real_distribution<float> odist(0.0f, 3.1415f * 0.3f);
 	std::uniform_real_distribution<float> rdist(6.0f, 20.0f);
-	for (auto i = 0; i < 80; i++)
+	std::uniform_real_distribution<float> bdist{ 0.4f,3.0f };
+
+	drawables.reserve(nDrawables);
+
+	for (auto i = 0; i < 8; i++)
 	{
-		boxes.push_back(std::make_unique<Box>(
+		drawables.push_back(std::make_unique<Box>(
 			wnd.Gfx(), rng, adist,
-			ddist, odist, rdist
+			ddist, odist, rdist, bdist
 		));
 	}
 	wnd.Gfx().SetProjection(DirectX::XMMatrixPerspectiveLH(1.0f, 3.0f / 4.0f, 0.5f, 100.0f));
@@ -51,7 +53,7 @@ int App::Begin()
 void App::Update(float dt)
 {
 	wnd.Gfx().ClearBuffer(0.4f, 0.2f, 1.0f);
-	for (auto& b : boxes)
+	for (auto& b : drawables)
 	{
 		b->Update(dt);
 		b->Draw(wnd.Gfx());
@@ -78,7 +80,7 @@ void App::Update(float dt)
 	wnd.Gfx().pSpriteBatch->Begin(DirectX::SpriteSortMode_Deferred, // Or your preferred sort mode
 		nullptr,                          // Use default BlendState (alpha blend)
 		nullptr,                          // Use default SamplerState
-		wnd.Gfx().GetDepthStencilState3D(), // <--- Your 3D Depth State
+		wnd.Gfx().GetDepthStencilState(), // Use Depth State
 		nullptr                           // Use default RasterizerState
 	);
 	wnd.Gfx().pSpriteFont->DrawString(wnd.Gfx().pSpriteBatch.get(), L"Hello, DirectXTK!", DirectX::XMFLOAT2(300, 400), DirectX::Colors::PaleVioletRed);

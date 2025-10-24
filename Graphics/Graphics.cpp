@@ -366,7 +366,7 @@ void Graphics::DrawTest(float angle, float x, float y, float z)
 	pContext->DrawIndexed(UINT(std::size(indices)), 0u, 0u);
 }
 
-ID3D11DepthStencilState* Graphics::GetDepthStencilState3D()
+ID3D11DepthStencilState* Graphics::GetDepthStencilState()
 {
 	return pDSState.Get();
 }

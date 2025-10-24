@@ -165,7 +165,13 @@
     <ClInclude Include="ErrorHandling\SmflmException.h" />
     <ClInclude Include="ErrorHandling\WindowExceptionMacros.h" />
     <ClInclude Include="Graphics\Drawable\Box.h" />
+    <ClInclude Include="Graphics\Drawable\Cone.h" />
+    <ClInclude Include="Graphics\Drawable\Cube.h" />
     <ClInclude Include="Graphics\Drawable\DrawableBase.h" />
+    <ClInclude Include="Graphics\Drawable\IndexedTriangleList.h" />
+    <ClInclude Include="Graphics\Drawable\Plane.h" />
+    <ClInclude Include="Graphics\Drawable\Prism.h" />
+    <ClInclude Include="Graphics\Drawable\Sphere.h" />
     <ClInclude Include="Graphics\IBindable\ConstantBuffers.h" />
     <ClInclude Include="Graphics\Drawable\Drawable.h" />
     <ClInclude Include="Graphics\IBindable\IBindable.h" />
@@ -182,6 +188,7 @@
     <ClInclude Include="Input\Mouse.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="SmflmWin.h" />
+    <ClInclude Include="Tools\TapiMath.h" />
     <ClInclude Include="Tools\Timer.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
