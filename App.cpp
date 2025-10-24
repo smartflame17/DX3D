@@ -17,7 +17,7 @@ App::App():
 			ddist, odist, rdist
 		));
 	}
-	wnd.Gfx().SetProjection(DirectX::XMMatrixPerspectiveLH(1.0f, 3.0f / 4.0f, 0.5f, 40.0f));
+	wnd.Gfx().SetProjection(DirectX::XMMatrixPerspectiveLH(1.0f, 3.0f / 4.0f, 0.5f, 100.0f));
 }
 
 App::~App()
@@ -25,19 +25,31 @@ App::~App()
 
 int App::Begin()
 {
+	// Define timestep and init timer
+	const float dt = 1.0f / TARGET_FPS;
+	float accumulator = 0.0f;
+	timer.Mark();
+
 	// If ecode has value (some event handling)
 	while (true) {
 		if (const auto ecode = Window::ProcessMessages())
 			return *ecode;
 
-		Update();
+		// Accumulate the time elapsed since the last frame
+		accumulator += timer.Mark();
+
+		// As long as we have enough accumulated time,
+		// run the update logic in fixed steps.
+		while (accumulator >= dt)
+		{
+			Update(dt);
+			accumulator -= dt;
+		}
 	}
 }
 
-void App::Update()
+void App::Update(float dt)
 {
-	// Game logic
-	auto dt = timer.Mark();
 	wnd.Gfx().ClearBuffer(0.4f, 0.2f, 1.0f);
 	for (auto& b : boxes)
 	{
@@ -61,5 +73,17 @@ void App::Update()
 	}
 
 	wnd.Gfx().DrawTest(timer.Peek(), wnd.mouse.GetPosX() / 400.0f - 1.0f, -wnd.mouse.GetPosY() / 300.0f + 1.0f, zpos);*/
+
+	// Draw Sprites and Text
+	wnd.Gfx().pSpriteBatch->Begin(DirectX::SpriteSortMode_Deferred, // Or your preferred sort mode
+		nullptr,                          // Use default BlendState (alpha blend)
+		nullptr,                          // Use default SamplerState
+		wnd.Gfx().GetDepthStencilState3D(), // <--- Your 3D Depth State
+		nullptr                           // Use default RasterizerState
+	);
+	wnd.Gfx().pSpriteFont->DrawString(wnd.Gfx().pSpriteBatch.get(), L"Hello, DirectXTK!", DirectX::XMFLOAT2(300, 400), DirectX::Colors::PaleVioletRed);
+	wnd.Gfx().pSpriteBatch->End();
+
+
 	wnd.Gfx().Endframe();
 }

@@ -1,6 +1,6 @@
 #pragma once
 
-#define _WIN32_WINNT 0x0601	//directed for windows 7 or later
+#define _WIN32_WINNT 0x0A00	//directed for windows 7 or later
 #include <sdkddkver.h>
 
 // override macros for windows macro notations

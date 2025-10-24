@@ -5,6 +5,7 @@
 
 #pragma comment(lib,"d3d11.lib")		// tell linker about d3d library
 #pragma comment(lib, "D3DCompiler.lib")	// for compiling hlsl shader at runtime
+#pragma comment(lib, "DirectXTK.lib")	// link DirectX Toolkit library
 
 namespace wrl = Microsoft::WRL;
 namespace dx = DirectX;
@@ -61,6 +62,11 @@ Graphics::Graphics(HWND hWnd)
 		&pContext
 	));
 
+	// init spritefont and spritebatch
+	pSpriteBatch = std::make_unique<DirectX::SpriteBatch>(pContext.Get());
+	pSpriteFont = std::make_unique<DirectX::SpriteFont>(pDevice.Get(), L"Graphics/Fonts/SegoeUI.spritefont");
+
+
 	// get access to texture (back buffer) in swap chain
 	wrl::ComPtr<ID3D11Resource> pBackBuffer = nullptr;
 	GFX_THROW_FAILED(pSwap->GetBuffer(0, __uuidof(ID3D11Texture2D), &pBackBuffer));
@@ -75,7 +81,6 @@ Graphics::Graphics(HWND hWnd)
 	dsDesc.DepthEnable = TRUE;
 	dsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
 	dsDesc.DepthFunc = D3D11_COMPARISON_LESS;			// the less depth should be rendered (one that is closer to camera)
-	wrl::ComPtr<ID3D11DepthStencilState> pDSState;
 	GFX_THROW_FAILED(pDevice->CreateDepthStencilState(&dsDesc, &pDSState));
 
 	// bind state to pipeline
@@ -88,7 +93,7 @@ Graphics::Graphics(HWND hWnd)
 	descDepth.Height = 600u;	// this should match size of swap chain
 	descDepth.MipLevels = 1u;	// 1 mip level
 	descDepth.ArraySize = 1u;	// single texture
-	descDepth.Format = DXGI_FORMAT_D32_FLOAT;	// 32-bit float for depth
+	descDepth.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;	// 24-bit float for depth, 8-bit uint for stencil
 
 	// for anti-alising (not used now)
 	descDepth.SampleDesc.Count = 1u;
@@ -96,19 +101,23 @@ Graphics::Graphics(HWND hWnd)
 
 	descDepth.Usage = D3D11_USAGE_DEFAULT;
 	descDepth.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	descDepth.CPUAccessFlags = 0;
+	descDepth.MiscFlags = 0;
 	GFX_THROW_FAILED(pDevice->CreateTexture2D(&descDepth, nullptr, &pDepthStencil));	// nullptr since no initial depth image (will be filled throughout rendering)
 
 	// create view of depth stencil texture
 	D3D11_DEPTH_STENCIL_VIEW_DESC descDSV = {};
-	descDSV.Format = DXGI_FORMAT_D32_FLOAT;
-	descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+	descDSV.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DMS;
 	descDSV.Texture2D.MipSlice = 0u;
+	descDSV.Texture2DMS.UnusedField_NothingToDefine = 0;
+
 	GFX_THROW_FAILED(pDevice->CreateDepthStencilView(pDepthStencil.Get(), &descDSV, &pDSV));
 
 	pContext->OMSetRenderTargets(1u, pTarget.GetAddressOf(), pDSV.Get());
 
 	// configure viewport
-	D3D11_VIEWPORT vp;
+	D3D11_VIEWPORT vp = {};
 	vp.Width = 800.0f;
 	vp.Height = 600.0f;
 	vp.MinDepth = 0.0f;
@@ -134,7 +143,7 @@ void Graphics::ClearBuffer(float r, float g, float b) noexcept
 {
 	const float color[] = { r, g, b, 1.0f };
 	pContext->ClearRenderTargetView(pTarget.Get(), color);	// clear back buffer with specified color
-	pContext->ClearDepthStencilView(pDSV.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0u);	// clear depth buffer to 1.0f
+	pContext->ClearDepthStencilView(pDSV.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0u);	// clear depth buffer to 1.0f (max depth)
 }
 
 void Graphics::DrawIndexed(UINT count) noexcept(!IS_DEBUG)
@@ -235,6 +244,7 @@ void Graphics::DrawTest(float angle, float x, float y, float z)
 		{
 			dx::XMMatrixTranspose(
 			dx::XMMatrixRotationZ(angle) *
+			dx::XMMatrixRotationY(angle)*
 			dx::XMMatrixRotationX(angle) *
 			dx::XMMatrixTranslation(x, y, z + 4.0f) *
 			dx::XMMatrixPerspectiveLH(1.0f, 3.0f/4.0f, 0.5f, 100.0f))
@@ -269,12 +279,12 @@ void Graphics::DrawTest(float angle, float x, float y, float z)
 	const ConstantBuffer2 cb2 =
 	{
 		{
-			{1.0f, 0.0f, 0.0f},
-			{1.0f, 0.0f, 1.0f},
-			{0.0f, 1.0f, 0.0f},
-			{0.0f, 0.0f, 1.0f},
-			{1.0f, 1.0f, 0.0f},
-			{0.0f, 1.0f, 1.0f},	
+			{1.0f, 0.0f, 1.0f, 1.0f},
+			{0.0f, 1.0f, 0.0f, 1.0f},
+			{0.0f, 0.0f, 1.0f, 1.0f},
+			{1.0f, 1.0f, 0.0f, 1.0f},
+			{0.0f, 1.0f, 1.0f, 1.0f},
+			{1.0f, 0.0f, 0.0f, 1.0f}
 		}
 	};
 	wrl::ComPtr<ID3D11Buffer> pConstantBuffer2;
@@ -354,6 +364,11 @@ void Graphics::DrawTest(float angle, float x, float y, float z)
 	pContext->RSSetViewports(1u, &vp);
 
 	pContext->DrawIndexed(UINT(std::size(indices)), 0u, 0u);
+}
+
+ID3D11DepthStencilState* Graphics::GetDepthStencilState3D()
+{
+	return pDSState.Get();
 }
 
 //////////////// Exception handling ////////////////

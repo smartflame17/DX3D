@@ -1,6 +1,9 @@
 #pragma once
 #include "../SmflmWin.h"
 #include "../ErrorHandling/SmflmException.h"
+#include "SimpleMath.h"
+#include "SpriteBatch.h"
+#include "SpriteFont.h"
 #include <wrl.h>
 #include <DirectXMath.h>
 #include <d3d11.h>
@@ -49,12 +52,28 @@ public:
 	DirectX::XMMATRIX GetProjection() const noexcept;
 	void DrawTest(float angle, float x, float y, float z);
 
+	ID3D11DepthStencilState* GetDepthStencilState3D();
+
+	// Overload new and delete for 16-byte alignment
+	void* operator new(size_t i)
+	{
+		return _aligned_malloc(i, 16);
+	}
+
+	void operator delete(void* p)
+	{
+		_aligned_free(p);
+	}
 private:
-	DirectX::XMMATRIX projection;								// projection matrix
+	DirectX::XMMATRIX projection = DirectX::XMMATRIX();								// projection matrix
 
 	Microsoft::WRL::ComPtr<ID3D11Device> pDevice = nullptr;
 	Microsoft::WRL::ComPtr<IDXGISwapChain> pSwap = nullptr;
 	Microsoft::WRL::ComPtr<ID3D11DeviceContext> pContext = nullptr;
 	Microsoft::WRL::ComPtr<ID3D11RenderTargetView> pTarget = nullptr;
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> pDSV = nullptr;
+	Microsoft::WRL::ComPtr<ID3D11DepthStencilState> pDSState = nullptr;
+public:
+	std::unique_ptr<DirectX::SpriteBatch> pSpriteBatch;
+	std::unique_ptr<DirectX::SpriteFont> pSpriteFont;
 };
