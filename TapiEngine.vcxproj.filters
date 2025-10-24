@@ -170,6 +170,27 @@
     <ClInclude Include="Graphics\Drawable\DrawableBase.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Graphics\Drawable\IndexedTriangleList.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Drawable\Cube.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Drawable\Plane.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Tools\TapiMath.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Drawable\Sphere.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Drawable\Prism.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Drawable\Cone.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="TapiEngine.rc">
@@ -192,6 +213,7 @@
       <Filter>리소스 파일</Filter>
     </None>
     <None Include="Graphics\README.md" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\VertexShader.hlsl">

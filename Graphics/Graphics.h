@@ -52,7 +52,7 @@ public:
 	DirectX::XMMATRIX GetProjection() const noexcept;
 	void DrawTest(float angle, float x, float y, float z);
 
-	ID3D11DepthStencilState* GetDepthStencilState3D();
+	ID3D11DepthStencilState* GetDepthStencilState();
 
 	// Overload new and delete for 16-byte alignment
 	void* operator new(size_t i)
