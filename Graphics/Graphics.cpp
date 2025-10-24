@@ -307,7 +307,7 @@ void Graphics::DrawTest(float angle, float x, float y, float z)
 	// read in compiled pixel shader and create shader object
 	wrl::ComPtr<ID3D11PixelShader> pPixelShader;
 	wrl::ComPtr<ID3DBlob> pBlob;					// just a binary file (bytecode by hlsl compiler)
-	GFX_THROW_FAILED(D3DReadFileToBlob(L"PixelShader.cso", &pBlob));		// read compiled shader binary and save to Blob
+	GFX_THROW_FAILED(D3DReadFileToBlob(L"ColorIndexPS.cso", &pBlob));		// read compiled shader binary and save to Blob
 	GFX_THROW_FAILED(pDevice->CreatePixelShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, &pPixelShader));
 
 	// bind pixel shader
@@ -319,7 +319,7 @@ void Graphics::DrawTest(float angle, float x, float y, float z)
 
 	// do the same with vertex shader
 	wrl::ComPtr<ID3D11VertexShader> pVertexShader;
-	GFX_THROW_FAILED(D3DReadFileToBlob(L"VertexShader.cso", &pBlob));		// read compiled shader binary and save to Blob
+	GFX_THROW_FAILED(D3DReadFileToBlob(L"ColorIndexVS.cso", &pBlob));		// read compiled shader binary and save to Blob
 	GFX_THROW_FAILED(pDevice->CreateVertexShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, &pVertexShader));
 
 	// bind vertex shader

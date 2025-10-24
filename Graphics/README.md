@@ -44,6 +44,19 @@ virtual void Update()
 ```
 Performs any update needed per frame.
 
+
+## Geometric Primitives
+All geometric primitive shapes such as cubes, planes, prisms, cones and spheres are essentially a wrapper for IndexedTriangleList.  
+
+```Make()``` function transforms these primitives into IndexedTriangleList along with any divisions if any. This allows for tesselated textures or vertex manipulations.
+
 ## Others
 
-I have used Microsoft's DirectXTK (DirectX Toolkit) for implementing sprite / text rendering.
+I have used Microsoft's DirectXTK (DirectX Toolkit) for implementing sprite / text rendering.  
+
+All font files must be of ```.spritefont``` extension and be included in ```Graphics/Fonts``` directory.  
+
+To convert installed ```.ttf``` to ```.spritefont```, use the provided binary by Microsoft's DirectXTK library with the following command:  
+```
+MakeSpriteFont "My Font" myfont.spritefont /FontSize:16
+```
